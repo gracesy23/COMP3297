@@ -29,25 +29,24 @@
         </div>
 
         <div class="grid content">
-          <h3>Component</h3>
+          <h3 id="courselist">Course List</h3>
+          <h4>These are the courses you are currently taking:</h4>
           <div class="item-container">
-
-            <div id="item1img">
-              <img class="itemimg" alt="Item Image" id="itemicon1">
-            </div>
             <div id="item1">
-              <h2>These are the courses you are currently taking</h2>
               <nav>
                 <ul>
                   {% for Course in courses %}
                   <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}},
                       finished
                       modules: {{Course.progress}}</a></li>
+                      <button onclick="addToCart('i1h')">Enter Course</button>
                   {% endfor %}
                 </ul>
               </nav>
-              <button onclick="addToCart('i1h')">Enter Course</button>
+              
+              
             </div>
+            
             <script>
             </script>
   </body>
