@@ -76,8 +76,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ICE',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'database.sql',
 		'USER': 'root',
 		'PASSWORD': '',
 		'HOST': 'localhost',
