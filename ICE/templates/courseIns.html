@@ -1,0 +1,23 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{title}}</title>
+</head>
+<body>
+  <header>
+    <h1>Course homepage: {{title}}</h1>
+  </header>
+  <nav>
+    <ul>
+      {% for m in modules %}
+	  <li><a href="{% url 'moduleIns' mid=m.modID %}">Module {{m.counter}}</a></li>
+	  {% endfor %}
+    </ul>
+  </nav>
+  <a href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
+  <footer>
+    
+  </footer>
+</body>
+</html>
