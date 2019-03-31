@@ -1,0 +1,46 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Module: {{title}}</title>
+</head>
+<body>
+  <header>
+    <h1>Module: {{title}}</h1>
+  </header>
+  <nav>
+    <ul>
+      {% for m in components %}
+	  <li>{{m.content}}</li>
+	  {% endfor %}
+    </ul>
+  <div>
+	 Quiz: {{ quiz }}
+  </div>
+  <div>
+  <form  method='POST' action='{% url "changemodname" mid=mid %}'>
+     {% csrf_token %}
+   Module name: {{form1}}
+  <input type="submit" name="a" value="Change">
+  </form>
+  </div>
+  <div>
+  <form  method='POST' action='{% url "addComp" mid=mid %}'>
+     {% csrf_token %}
+   Add a component: {{form2}}
+  <input type="submit" name="b" value="Add">
+  </form>
+  </div>
+  <div>
+  <form  method='POST' action='{% url "addQuiz" mid=mid %}'>
+     {% csrf_token %}
+   Add a quiz: {{form2}}
+  <input type="submit" name="b" value="Add">
+  </form>
+  </div>
+  </nav>
+  <footer>
+    
+  </footer>
+</body>
+</html>
