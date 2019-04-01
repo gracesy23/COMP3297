@@ -49,7 +49,7 @@
           </div>
             <div id="component-list">
               <h3>Component List</h3>
-              <button>Attemp Quiz</button>
+              <button id="quizbutton">Attemp Quiz</button>
             </div>
 
             <script>
@@ -65,6 +65,10 @@
                 $("#show").click(function () {
                   $("p").hide();
                 });
+                $("#quizbutton").click(function () {
+                  window.open('quiz.html', '_blank');
+                });
+
               });
             </script>
   </body>
