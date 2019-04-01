@@ -20,7 +20,7 @@
       <div id="container">
         <div class="grid sidebar">
 
-          <div>
+          <div id="module-list">
             <h3>Module</h3>
             <h4 id="cat1" onclick="loadCategoryFirstPage('cat1')"></h4>
             <h4 id="cat2" onclick="loadCategoryFirstPage('cat2')"></h4>
@@ -29,27 +29,43 @@
         </div>
 
         <div class="grid content">
-          <h3 id="courselist">Course List</h3>
-          <h4>These are the courses you are currently taking:</h4>
-          <div class="course-container">
-            <div id="courses">
-              <nav>
-                <ul>
-                  {% for Course in courses %}
-                  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}},
-                      finished
-                      modules: {{Course.progress}}</a></li>
-                  <button onclick="addToCart('i1h')">Enter Course</button>
-                  {% endfor %}
-                </ul>
-              </nav>
+          <div id="course-list">
+            <h3>Course List</h3>
+            <h4>These are the courses you are currently taking:</h4>
+            <div class="course-container">
+              <div id="courses">
+                <nav>
+                  <ul>
+                    {% for Course in courses %}
+                    <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}},
+                        finished
+                        modules: {{Course.progress}}</a></li>
+                    <button id="coursebut1">Enter Course</button>
+                    {% endfor %}
+                  </ul>
+                </nav>
+              </div>
             </div>
-            <div>
-              <h3 id="component-list">Component List</h3>
+          </div>
+            <div id="component-list">
+              <h3>Component List</h3>
               <button>Attemp Quiz</button>
             </div>
 
             <script>
+              $(document).ready(function () {
+                $("#module-list").hide();
+                $("#component-list").hide();
+                $("#coursebut1").click(function () {
+                  $("#course-list").hide();
+                  $("#module-list").show();
+                  $("#component-list").show();
+                  $(".sidebar").css("border-right", "2px solid black");
+                });
+                $("#show").click(function () {
+                  $("p").hide();
+                });
+              });
             </script>
   </body>
 
