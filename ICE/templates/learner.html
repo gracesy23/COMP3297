@@ -48,8 +48,10 @@
             </div>
           </div>
             <div id="component-list">
-              <h3>Component List</h3>
-              <button id="quizbutton">Attemp Quiz</button>
+              <h3>Component</h3>
+              <button id="quizbutton">Attemp Quiz</button><br>
+              <p></p>
+              <button id="coursebutton">Back to Courses</button>
             </div>
 
             <script>
@@ -62,8 +64,11 @@
                   $("#component-list").show();
                   $(".sidebar").css("border-right", "2px solid black");
                 });
-                $("#show").click(function () {
-                  $("p").hide();
+                $("#coursebutton").click(function () {
+                  $("#course-list").show();
+                  $("#module-list").hide();
+                  $("#component-list").hide();
+                  $(".sidebar").css("border-right", "0px");
                 });
                 $("#quizbutton").click(function () {
                   window.open('quiz.html', '_blank');
