@@ -1,6 +1,6 @@
 # ICE
-Installation steps:  
-pipenv install django 
-cd ICE 
-pipenv shell  
-python manage.py runserver 
+Installation steps:<br />
+pipenv install django<br />
+cd ICE<br />
+pipenv shell<br />
+python manage.py runserver<br />
