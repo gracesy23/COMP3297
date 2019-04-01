@@ -56,9 +56,6 @@
           <div id="component-list">
             <h3>Component</h3>
             <button id="quizbutton">Attemp Quiz</button><br>
-            {% if check == 1 %}
-            <a href = "{% url 'quiz' lid=lid qid=quiz p=p cid=cid %}">Take the quiz</a>
-            {% endif %}
             <p></p>
             <button id="coursebutton">Back to Courses</button>
           </div>
@@ -80,7 +77,9 @@
                 $(".sidebar").css("border-right", "0px");
               });
               $("#quizbutton").click(function () {
-                window.open('quiz.html', '_blank');
+                var link = "{% url 'quiz' 0 1 2 1 %}";
+                window.open(link, '_blank');
+                
               });
 
             });
