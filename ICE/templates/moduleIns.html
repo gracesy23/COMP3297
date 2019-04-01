@@ -11,34 +11,48 @@
   <nav>
     <ul>
       {% for m in components %}
+	  {% if m.componentType == 1 %}
 	  <li>{{m.content}}</li>
+	  {% else %}
+	  <li>{% load staticfiles %}
+		<img src="{% static m.content %}" alt="Image"></li>
+	  {% endif %}
 	  {% endfor %}
     </ul>
   <div>
 	 Quiz: {{ quiz }}
   </div>
   <div>
-  <form  method='POST' action='{% url "changemodname" mid=mid %}'>
+  <form  method='POST' action='{% url "changemodname" mid=mid iid=iid cid=cid %}'>
      {% csrf_token %}
-   Module name: {{form1}}
+   New module {{form1}}
   <input type="submit" name="a" value="Change">
   </form>
   </div>
   <div>
-  <form  method='POST' action='{% url "addComp" mid=mid %}'>
+  <form  method='POST' action='{% url "addComp" mid=mid iid=iid cid=cid %}'>
      {% csrf_token %}
-   Add a component: {{form2}}
+   Add a component: <select name="compID">
+   {% for component in choice %}
+	<option value="{{component.compID}}">{{component.content}}</option>
+	{% endfor %}
+	</select>
   <input type="submit" name="b" value="Add">
   </form>
   </div>
   <div>
-  <form  method='POST' action='{% url "addQuiz" mid=mid %}'>
+  <form  method='POST' action='{% url "addQuiz" mid=mid iid=iid cid=cid %}'>
      {% csrf_token %}
-   Add a quiz: {{form2}}
+   Add a quiz: <select name="quizID">
+   {% for q in quizlist %}
+	<option value="{{q.quizID}}">Quiz:{{q.quizID}}, containing {{q.numOfQuestion}} questions</option>
+	{% endfor %}
+	</select>
   <input type="submit" name="b" value="Add">
   </form>
   </div>
   </nav>
+  <a href="{% url 'instructor' cid=cid iid=iid %}">Back to Course Page</a>
   <footer>
     
   </footer>

@@ -11,12 +11,12 @@
   <nav>
     <ul>
       {% for m in avamodules %}
-	  <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid %}">Module {{m.counter}}</a></li>
+	  <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}">{{m.title}}</a></li>
 	  {% endfor %}
 	  {% for m in unavamodules %}
-	  <li>Module {{m.counter}}</li>
+	  <li>{{m.title}}</li>
 	  {% endfor %}
-    </ul>
+	  </ul>
   </nav>
   <footer>
     
