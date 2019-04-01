@@ -22,6 +22,11 @@
 
           <div id="module-list">
             <h3>Module</h3>
+            <ul>
+              {% for m in components %}
+            <li>{{m.content}}</li>
+            {% endfor %}
+            </ul>
             <h4 id="cat1" onclick="loadCategoryFirstPage('cat1')"></h4>
             <h4 id="cat2" onclick="loadCategoryFirstPage('cat2')"></h4>
             <h4 id="cat3" onclick="loadCategoryFirstPage('cat3')"></h4>
