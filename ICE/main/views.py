@@ -42,17 +42,24 @@ def course(request,p,cid,lid):
 	learner.save()
 	for a in course:
 		mod = ModuleT()
-		if i <= p:
-			title = a.title
-			mod.modID = a.contains_modules
-			mod.counter =  i+1
-			i = i+1
-			avamodules.append(mod)
-		else:
-			mod.modID = a.contains_modules
-			mod.counter =  i+1
-			i = i+1
-			unavamodules.append(mod)
+		title = a.title
+		n = n + 1
+		mod.counter = n
+		if a.contains_modules != 0:
+			if i <= p:
+				allmod = Module.objects.filter(moduleID = a.contains_modules)
+				for b in allmod:
+					mod.modID = b.moduleID
+					mod.title =  b.moduleTitle
+				avamodules.append(mod)
+				i = i + 1
+			else:
+				allmod = Module.objects.filter(moduleID = a.contains_modules)
+				for b in allmod:
+					mod.modID = b.moduleID
+					mod.title =  b.moduleTitle
+				unavamodules.append(mod)
+				i = i + 1
 	
 	context = {
 		'title': title,
@@ -66,10 +73,13 @@ def course(request,p,cid,lid):
 	
 	return render(request, 'course.html', context)
 	
-def module(request, lid,mid,cid,p):
+def module(request, lid,mid,cid,p,counter):
 	
 	module = Module.objects.filter(moduleID = mid)
 	components = []
+	quizAvail = 0
+	if p < counter:
+		quizAvail = 1
 	for a in module:
 		title = a.moduleTitle
 		quiz = a.containsQuiz
@@ -83,7 +93,8 @@ def module(request, lid,mid,cid,p):
 		'title': title,
 		'p':p,
 		'cid': cid,
-		'lid':lid
+		'lid':lid,
+		'check':quizAvail
 	}
 	
 	return render(request, 'module.html', context)
@@ -117,10 +128,11 @@ def instructor(request, iid, cid):
 		mod = ModuleT()
 		title = a.title
 		mod.modID = a.contains_modules
-		mod.counter =  i+1
+		module = Module.objects.filter(moduleID = a.contains_modules)
+		for b in module:
+			mod.title =  b.moduleTitle
 		i = i+1
 		modules.append(mod)
-		
 	
 	context = {
 		'title': title,
@@ -143,10 +155,12 @@ def createModule(request,iid,cid):
 	
 	return instructor(request, iid, cid)
 	
-def moduleIns(request, mid):
+def moduleIns(request, mid,iid,cid):
 	
 	module = Module.objects.filter(moduleID = mid)
 	components = []
+	choice = []
+	temp = []
 	form1 = ChangeForm()
 	form2 = AddForm()
 	for a in module:
@@ -155,53 +169,73 @@ def moduleIns(request, mid):
 		component = Component.objects.filter(compID = a.containsComp)
 		for c in component:
 			components.append(c)
+	allComp = Component.objects.all()
+				
+	#add a quiz part
+	allQuiz = Quiz.objects.all()
+	temp = QuizT(quizID = 0,numOfQuestion = 0)
+	counter = 0
+	quizlist = []
+	for a in allQuiz:
+		if a.quizID != temp.quizID and temp.quizID != 0:
+			quizlist.append(temp)
+			temp = QuizT()
+			temp.quizID = a.quizID
+		elif a.quizID != temp.quizID:
+			temp.quizID = a.quizID
+		temp.numOfQuestion = temp.numOfQuestion + 1
+	quizlist.append(temp)
+		
 	
 	context = {
 		'components':components,
 		'quiz':quiz,
-		'title': title,
+		'title':title,
 		'mid':mid,
 		'form1':form1,
-		'form2':form2
+		'form2':form2,
+		'iid':iid,
+		'cid':cid,
+		'choice':allComp,
+		'quizlist':quizlist
 	}
 	
 	return render(request, 'moduleIns.html', context)
 	
-def changeModName(request,mid):
+def changeModName(request,mid,iid,cid):
 	form = ChangeForm(request.POST)
 	if form.is_valid():
 		module = Module.objects.filter(moduleID = mid)
-		title = form.cleaned_data['MN']
+		title = form.cleaned_data['name']
 		for m in module:
 			m.moduleTitle = title
 			m.save()
 	
-	return moduleIns(request, mid)
+	return moduleIns(request, mid,iid,cid)
 	
-def addComp(request,mid):
-	form = AddForm(request.POST)
-	if form.is_valid():
-		newmod = Module()
-		module = Module.objects.filter(moduleID = mid)
-		for m in module:
-			newmod.moduleID = m.moduleID
-			newmod.moduleTitle = m.moduleTitle
-			newmod.containsQuiz = m.containsQuiz
-		newmod.containsComp = form.cleaned_data['MN']
-		newmod.save()
+def addComp(request,mid,iid,cid):
+	form = request.POST
 	
-	return moduleIns(request, mid)
+	newmod = Module()
+	module = Module.objects.filter(moduleID = mid)
+	for m in module:
+		newmod.moduleID = m.moduleID
+		newmod.moduleTitle = m.moduleTitle
+		newmod.containsQuiz = m.containsQuiz
+	newmod.containsComp = form.get('compID')
+	newmod.save()
+	
+	return moduleIns(request, mid,iid,cid)
 		
-def addQuiz(request,mid):
-	form = AddForm(request.POST)
-	if form.is_valid():
-		quiz = form.cleaned_data['MN']
-		module = Module.objects.filter(moduleID = mid)
-		for m in module:
-			m.containsQuiz = quiz
-			m.save()
+def addQuiz(request,mid,iid,cid):
+	form = request.POST
+	quiz = form.get('quizID')
+	module = Module.objects.filter(moduleID = mid)
+	for m in module:
+		m.containsQuiz = quiz
+		m.save()
 	
-	return moduleIns(request, mid)
+	return moduleIns(request, mid,iid,cid)
 		
 	
 		

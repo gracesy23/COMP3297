@@ -11,7 +11,8 @@
   <nav>
     <ul>
       {% for q in questions %}
-      <li>{{q.content}}</li>
+      <li>{{q.question}}</li>
+	  <li>A.{{q.choiceA}}    B.{{q.choiceB}}    C.{{q.choiceC}}    D.{{q.choiceD}}</li>
 	  {% endfor %}
     </ul>
   </nav>
