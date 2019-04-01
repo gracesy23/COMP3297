@@ -1,26 +1,56 @@
 <DOCTYPE! html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <title>Learner's homepage</title>
-</head>
-<body>
-  <header>
-    <h1>Welcome, {{name}}</h1>
-  </header>
-  <div class = 'container'>
-  <h2>These are the courses you are currently taking</h2>
-  <nav>
-    <ul>
-      {% for Course in courses %}
-	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
-	  {% endfor %}
-	</ul>
-  </nav>
-  </div>
-  <footer>
-    ICE -one tool to learn it all
-  </footer>
-</body>
-</html>
+  <html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="learner.css">
+    <title>Learner's homepage</title>
+  </head>
+
+  <body>
+    <div class="headcontainer">
+      <div class="header">
+        <h1>Welcome, {{name}}</h1>
+      </div>
+      <div class="cart">
+      </div>
+
+      <div id="container">
+        <div class="grid sidebar">
+
+          <div>
+            <h3>Module</h3>
+            <h4 id="cat1" onclick="loadCategoryFirstPage('cat1')"></h4>
+            <h4 id="cat2" onclick="loadCategoryFirstPage('cat2')"></h4>
+            <h4 id="cat3" onclick="loadCategoryFirstPage('cat3')"></h4>
+          </div>
+        </div>
+
+        <div class="grid content">
+          <h3 id="courselist">Course List</h3>
+          <h4>These are the courses you are currently taking:</h4>
+          <div class="course-container">
+            <div id="courses">
+              <nav>
+                <ul>
+                  {% for Course in courses %}
+                  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}},
+                      finished
+                      modules: {{Course.progress}}</a></li>
+                  <button onclick="addToCart('i1h')">Enter Course</button>
+                  {% endfor %}
+                </ul>
+              </nav>
+            </div>
+            <div>
+              <h3 id="component-list">Component List</h3>
+              <button>Attemp Quiz</button>
+            </div>
+
+            <script>
+            </script>
+  </body>
+
+  </html>
