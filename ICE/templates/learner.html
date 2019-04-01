@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="learner.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
     <title>Learner's homepage</title>
   </head>
 
@@ -24,8 +25,8 @@
             <h3>Module</h3>
             <ul>
               {% for m in components %}
-            <li>{{m.content}}</li>
-            {% endfor %}
+              <li>{{m.content}}</li>
+              {% endfor %}
             </ul>
             <h4 id="cat1" onclick="loadCategoryFirstPage('cat1')"></h4>
             <h4 id="cat2" onclick="loadCategoryFirstPage('cat2')"></h4>
@@ -52,35 +53,38 @@
               </div>
             </div>
           </div>
-            <div id="component-list">
-              <h3>Component</h3>
-              <button id="quizbutton">Attemp Quiz</button><br>
-              <p></p>
-              <button id="coursebutton">Back to Courses</button>
-            </div>
+          <div id="component-list">
+            <h3>Component</h3>
+            <button id="quizbutton">Attemp Quiz</button><br>
+            {% if check == 1 %}
+            <a href = "{% url 'quiz' lid=lid qid=quiz p=p cid=cid %}">Take the quiz</a>
+            {% endif %}
+            <p></p>
+            <button id="coursebutton">Back to Courses</button>
+          </div>
 
-            <script>
-              $(document).ready(function () {
+          <script>
+            $(document).ready(function () {
+              $("#module-list").hide();
+              $("#component-list").hide();
+              $("#coursebut1").click(function () {
+                $("#course-list").hide();
+                $("#module-list").show();
+                $("#component-list").show();
+                $(".sidebar").css("border-right", "2px solid black");
+              });
+              $("#coursebutton").click(function () {
+                $("#course-list").show();
                 $("#module-list").hide();
                 $("#component-list").hide();
-                $("#coursebut1").click(function () {
-                  $("#course-list").hide();
-                  $("#module-list").show();
-                  $("#component-list").show();
-                  $(".sidebar").css("border-right", "2px solid black");
-                });
-                $("#coursebutton").click(function () {
-                  $("#course-list").show();
-                  $("#module-list").hide();
-                  $("#component-list").hide();
-                  $(".sidebar").css("border-right", "0px");
-                });
-                $("#quizbutton").click(function () {
-                  window.open('quiz.html', '_blank');
-                });
-
+                $(".sidebar").css("border-right", "0px");
               });
-            </script>
+              $("#quizbutton").click(function () {
+                window.open('quiz.html', '_blank');
+              });
+
+            });
+          </script>
   </body>
 
   </html>
