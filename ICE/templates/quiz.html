@@ -9,7 +9,7 @@
     <h1>Quiz</h1>
   </header>
   <nav>
-   <div> 
+   <div>
     <form  method='POST' action='{% url "quizcheck" qid=qid lid=lid cid=cid p=p %}'>
     {% csrf_token %}
     <ul>
@@ -26,11 +26,11 @@
 	</ul>
   <input type="submit" name="b" value="Submit">
   </form>
-	 
+
     </div>
   </nav>
   <footer>
-    
+
   </footer>
 </body>
 </html>
