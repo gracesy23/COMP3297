@@ -15,4 +15,5 @@ urlpatterns = [
 	url('learner/course/(?P<p>\d)/(?P<cid>\d)/(?P<lid>\d)/$', views.course, name = 'course'),
 	url('learner/course/module/(?P<mid>\d)/(?P<cid>\d)/(?P<p>\d)/(?P<lid>\d)/(?P<counter>\d)/$', views.module, name = 'module'),
 	url('learner/course/module/quiz/(?P<qid>\d)/(?P<cid>\d)/(?P<p>\d)/(?P<lid>\d)', views.quiz, name = 'quiz'),
+	url('learner/course/module/quiz/check/(?P<qid>\d)/(?P<cid>\d)/(?P<p>\d)/(?P<lid>\d)', views.quizCheck, name = 'quizcheck'),
 ]
