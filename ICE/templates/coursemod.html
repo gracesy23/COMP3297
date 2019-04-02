@@ -25,7 +25,7 @@
             <nav>
               <ul>
                 {% for m in avamodules %}
-                <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}">{{m.title}}</a></li>
+                <li><a class="module" id="m{{m.modID}}" onclick="loadModule('{{m}}', '{{mc}}');">{{m.title}}</a></li>
                 {% endfor %}
                 {% for m in unavamodules %}
                 <li>{{m.title}}</li>
@@ -43,7 +43,7 @@
           <div id="component-list">
             <h3>Component</h3>
             <nav>
-              <ul>
+              <ul id="componentul">
                 {% for m in components %}
                 {% if m.componentType == 1 %}
                 <li>{{m.content}}</li>
@@ -66,14 +66,41 @@
 
 
           <script>
-              $(document).ready(function () {
-                $("#quizbutton").click(function () {
-                  var link = "{% url 'quiz' 0 1 2 1 %}";
-                  window.open(link, '_blank');
-                });
-  
+            $(".sidebar").css("border-right", "2px solid black");
+            $(document).ready(function () {
+
+              $("#quizbutton").click(function () {
+                var link = "{% url 'quiz' 0 1 2 1 %}";
+                window.open(link, '_blank');
               });
-            </script>
+
+              $(".module").click(function () {
+                var mid = this.id.slice(1);
+                console.log(mid);
+                $.getJSON("/learner/coursemod/loadComp/", { 'lid': 1, 'mid': mid, 'cid': 1, 'p': 1, 'counter': 1 }, function (ret) {
+                  //console.log(ret);
+                  $("#componentul").html("");
+                  for (x in ret.component) {
+
+                    if (ret.component[x].includes(".jpg")) {
+                      $("#componentul").append('<li>' + '<img src="/static/' + ret.component[x] + '" alt="Image">' + '</li>');
+                    }
+                    else {
+                      $("#componentul").append('<li>' + ret.component[x] + '</li>');
+                    }
+
+                  }
+
+                })
+              });
+            });
+            function loadModule(m, mc) {
+              //console.log(mc);
+              var mcontent = "{{mc.content}}";
+              console.log(mcontent);
+              //href="% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %"
+            }
+          </script>
   </body>
 
   </html>
