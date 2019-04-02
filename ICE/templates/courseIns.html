@@ -11,7 +11,7 @@
   <nav>
     <ul>
       {% for m in modules %}
-	  <li><a href="{% url 'moduleIns' mid=m.modID %}">Module {{m.counter}}</a></li>
+	  <li><a href="{% url 'moduleIns' mid=m.modID iid=iid cid=cid %}">{{m.title}}</a></li>
 	  {% endfor %}
     </ul>
   </nav>

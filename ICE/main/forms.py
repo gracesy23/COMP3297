@@ -1,7 +1,7 @@
 from django import forms
 
 class ChangeForm(forms.Form):
-	MN = forms.CharField()
+	name = forms.CharField()
 	
 class AddForm(forms.Form):
 	MN = forms.IntegerField()
