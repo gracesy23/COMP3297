@@ -1,46 +1,36 @@
 <DOCTYPE! html>
-  <html lang="en">
+<html lang="en">
+<head>
+  <meta charset="utf-8">566
+  <title>Quiz</title>
+</head>
+<body>
+  <header>
+    <h1>Quiz</h1>
+  </header>
+  <nav>
+   <div>
+    <form  method='POST' action='{% url "quizcheck" qid=qid lid=lid cid=cid p=p %}'>
+    {% csrf_token %}
+    <ul>
+    {% for q in questions %}
+    <li>{{q.question}}</li>
+    <li>A.{{q.choiceA}}    B.{{q.choiceB}}    C.{{q.choiceC}}    D.{{q.choiceD}}</li>
+	Your answer: <select name="ansTo{{q.questionID}}">
+  <option value="choiceA">A</option>
+	<option value="choiceB">B</option>
+	<option value="choiceC">C</option>
+	<option value="choiceD">D</option>
+	</select>
+	{% endfor %}
+	</ul>
+  <input type="submit" name="b" value="Submit">
+  </form>
 
-  <head>
-    <meta charset="utf-8">
-    <title>Quiz</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
-  </head>
-
-  <body>
-    <header>
-      <h1>Quiz</h1>
-    </header>
-    <nav>
-      <ul>
-        {% for q in questions %}
-        <li>{{q.content}}</li>
-        {% endfor %}
-      </ul>
-    </nav>
-    <button id="subquizbutton">Submit Quiz</button><br>
-    <a href="{% url 'course' lid=lid cid=cid p=p %}">Submit Passing Quiz</a>
-    <div id="results">
-      <h5 id="marks">8/10</h5>
-      <h5 id="passing">Pass</h5>
     </div>
-    <footer>
+  </nav>
+  <footer>
 
-    </footer>
-    <script>
-      $(document).ready(function () {
-        $("#results").hide();
-        $("#subquizbutton").click(function () {
-          $("#results").show();
-        });
-
-      });
-
-
-    </script>
-  </body>
-
-  </html>
+  </footer>
+</body>
+</html>
