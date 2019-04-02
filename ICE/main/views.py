@@ -123,15 +123,17 @@ def instructor(request, iid, cid):
 	modules = []
 	i = 0
 	for a in course:
-		mod = ModuleT()
 		title = a.title
-		mod.modID = a.contains_modules
-		module = Module.objects.filter(moduleID = a.contains_modules)
-		for b in module:
-			mod.title =  b.moduleTitle
-		i = i+1
-		modules.append(mod)
-	
+		if a.contains_modules != 0:
+			mod = ModuleT()
+			mod.modID = a.contains_modules
+			module = Module.objects.filter(moduleID = a.contains_modules)
+			for b in module:
+				mod.title =  b.moduleTitle
+			i = i+1
+			modules.append(mod)
+		
+			
 	context = {
 		'title': title,
 		'modules': modules,
