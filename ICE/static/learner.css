@@ -38,6 +38,7 @@
     border-right-style: dotted;
     font-size: large;
     display: block;
+    overflow: scroll;
   }
   
   .content {
@@ -46,6 +47,7 @@
     grid-row-start: 1;
     grid-row-end: 2;
     font-size: medium;
+    
   }
   
   .course-container {
@@ -53,101 +55,14 @@
     grid-template-columns: 2fr 2fr 1fr;
         grid-column-gap: 10px;
         grid-row-gap: 15px;
+    
   }
 
-  #courses{
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
   #component-list{
     grid-column-start: 1;
     grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  }
-  #item3img{
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-  #item3{
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    grid-row-end: 4;
-  }
-  
-  
-  .ppage {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }  
-  .pageno {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }  
-  .npage {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 4;
-    grid-row-end: 5;
-  }  
-  
-  #container2 {
-        border: 2px solid black;
-  }
-  
-  #item-container2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-        grid-column-gap: 10px;
-        grid-row-gap: 15px;
-  }
-  #spcart{
-    grid-column-start: 1;
-    grid-column-end: 2;
     grid-row-start: 1;
-    grid-row-end: 2;
-  
-  }
-  #price2{
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 2;
     grid-row-end: 3;
-  
+    max-height: 400px;
+    overflow: scroll;
   }
-  #quantity2{
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-  
-  
-  }
-  .item2{
-    grid-column-start: 2;
-    grid-column-end: 3;
-      grid-row-start: 1;
-    grid-row-end: 3;
-  }
-  .itemp2{
-    grid-column-start: 3;
-    grid-column-end: 4;
-  }
-  .itemq2{
-    grid-column-start: 4;
-    grid-column-end: 5;
-  }
-  
-  #checkout {
-    grid-column-start: 2;
-    grid-column-end: 5;
-  }  

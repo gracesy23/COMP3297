@@ -23,9 +23,9 @@
 
           <div id="module-list">
             <h3>Module</h3>
-            
+
             <ul>
-                <h4>Test2</h4>
+              <h4>Test2</h4>
               {% for m in avamodules %}
               <li><a href="{% url 'module' 2 1 1 counter=m.counter %}">{{m.title}}</a></li>
               {% endfor %}
@@ -46,10 +46,11 @@
                 <nav>
                   <ul>
                     {% for Course in courses %}
-                    <li><a href="{% url 'courseModule' lid=lid p=Course.progress cid=Course.courseID mid=1 counter=1 %}">{{Course.title}},
+                    <li><a
+                        href="{% url 'courseModule' lid=lid p=Course.progress cid=Course.courseID mid=1 counter=1 %}">{{Course.title}},
                         finished
-                        modules: {{Course.progress}}</a></li>
-                    <button id="coursebut1">Enter Course</button>
+                        modules: {{Course.progress}}</a></li><br>
+                  
                     {% endfor %}
                   </ul>
                 </nav>

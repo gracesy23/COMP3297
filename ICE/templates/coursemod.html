@@ -12,9 +12,7 @@
   <body>
     <div class="headcontainer">
       <div class="header">
-        <h1>Welcome, {{name}}</h1>
-      </div>
-      <div class="cart">
+        <h2>Welcome, {{name}}</h2>
       </div>
 
       <div id="container">
@@ -38,10 +36,8 @@
         </div>
 
         <div class="grid content">
-          <div id="course-list">
-          </div>
           <div id="component-list">
-            <h3>Component</h3>
+            <h3>Components</h3>
             <nav>
               <ul id="componentul">
                 {% for m in components %}
@@ -63,7 +59,7 @@
             <p></p>
             <a id="coursebutton" href="{% url 'learner' id=1 %}">Back to Courses</a>
           </div>
-
+          </div>
 
           <script>
             $(".sidebar").css("border-right", "2px solid black");
