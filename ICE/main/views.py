@@ -200,14 +200,12 @@ def quiz(request, lid,qid, cid, p):
 		question = Question.objects.get(questionID = a.questionID)
 		questions.append(question)
 	
-	i = int(p)
-	i = i+1
-	p = str(i)
 	context = {
 		'questions':questions,
 		'cid':cid,
 		'p':p,
-		'lid':lid
+		'lid':lid,
+		'qid':qid
 	}
 	
 	return render(request, 'quiz.html', context)
@@ -218,15 +216,17 @@ def instructor(request, iid, cid):
 	modules = []
 	i = 0
 	for a in course:
-		mod = ModuleT()
 		title = a.title
-		mod.modID = a.contains_modules
-		module = Module.objects.filter(moduleID = a.contains_modules)
-		for b in module:
-			mod.title =  b.moduleTitle
-		i = i+1
-		modules.append(mod)
-	
+		if a.contains_modules != 0:
+			mod = ModuleT()
+			mod.modID = a.contains_modules
+			module = Module.objects.filter(moduleID = a.contains_modules)
+			for b in module:
+				mod.title =  b.moduleTitle
+			i = i+1
+			modules.append(mod)
+		
+			
 	context = {
 		'title': title,
 		'modules': modules,
@@ -329,4 +329,38 @@ def addQuiz(request,mid,iid,cid):
 		m.save()
 	
 	return moduleIns(request, mid,iid,cid)
+		
+def quizCheck(request,qid,p,lid,cid):	
+	quiz = Quiz.objects.filter(quizID = qid)
+	form = request.POST
+	total = 0
+	correct = 0
+	passed = 0
+	for a in quiz:
+		question = Question.objects.get(questionID = a.questionID)
+		ans = "ansTo"
+		ans = ans + str(question.questionID)
+		total = total + 1
+		if question.answer == form.get(ans):
+			correct = correct + 1
+	result = correct/total
+	if result >= 0.6:
+		passed = 1
+		p = int(p)
+		p = p + 1
+		learner = Learner.objects.get(takecourse = cid, learnerID = lid)
+		learner.progress = p
+		learner.save()
+	result = result * 100	
+	context = {
+		'passed':passed,
+		'result':result,
+		'lid':lid,
+		'cid':cid,
+		'p':p
+	}
+		
+	return render(request,'quizSubmit.html',context)	
+		
+		
 		
