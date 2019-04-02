@@ -23,14 +23,17 @@
 
           <div id="module-list">
             <h3>Module</h3>
+            
             <ul>
-              {% for m in components %}
-              <li>{{m.content}}</li>
+                <h4>Test2</h4>
+              {% for m in avamodules %}
+              <li><a href="{% url 'module' 2 1 1 counter=m.counter %}">{{m.title}}</a></li>
+              {% endfor %}
+              {% for m in unavamodules %}
+              <li>{{m.title}}</li>
               {% endfor %}
             </ul>
-            <h4 id="cat1" onclick="loadCategoryFirstPage('cat1')"></h4>
-            <h4 id="cat2" onclick="loadCategoryFirstPage('cat2')"></h4>
-            <h4 id="cat3" onclick="loadCategoryFirstPage('cat3')"></h4>
+
           </div>
         </div>
 
@@ -43,7 +46,7 @@
                 <nav>
                   <ul>
                     {% for Course in courses %}
-                    <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}},
+                    <li><a href="{% url 'courseModule' lid=lid p=Course.progress cid=Course.courseID mid=1 counter=1 %}">{{Course.title}},
                         finished
                         modules: {{Course.progress}}</a></li>
                     <button id="coursebut1">Enter Course</button>
@@ -79,7 +82,7 @@
               $("#quizbutton").click(function () {
                 var link = "{% url 'quiz' 0 1 2 1 %}";
                 window.open(link, '_blank');
-                
+
               });
 
             });

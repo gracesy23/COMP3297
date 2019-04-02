@@ -98,6 +98,66 @@ def module(request, lid,mid,cid,p,counter):
 	}
 	
 	return render(request, 'module.html', context)
+
+def courseModule(request,p,cid,lid,mid,counter):
+	learner = Learner.objects.get(takecourse = cid, learnerID = lid)
+	course = Course.objects.filter(courseID = cid)
+	avamodules = []
+	unavamodules = []
+	i = 0
+	n = 0
+	p = int(p)
+	learner.progress = p
+	learner.save()
+	for a in course:
+		mod = ModuleT()
+		title = a.title
+		n = n + 1
+		mod.counter = n
+		if a.contains_modules != 0:
+			if i <= p:
+				allmod = Module.objects.filter(moduleID = a.contains_modules)
+				for b in allmod:
+					mod.modID = b.moduleID
+					mod.title =  b.moduleTitle
+				avamodules.append(mod)
+				i = i + 1
+			else:
+				allmod = Module.objects.filter(moduleID = a.contains_modules)
+				for b in allmod:
+					mod.modID = b.moduleID
+					mod.title =  b.moduleTitle
+				unavamodules.append(mod)
+				i = i + 1
+
+	module = Module.objects.filter(moduleID = mid)
+	components = []
+	quizAvail = 0
+	p = str(p)
+	if p < counter:
+		quizAvail = 1
+	for a in module:
+		title = a.moduleTitle
+		quiz = a.containsQuiz
+		component = Component.objects.filter(compID = a.containsComp)
+		for c in component:
+			components.append(c)
+	
+	context = {
+		'title': title,
+		'avamodules': avamodules,
+		'unavamodules':unavamodules,
+		'counter': n,
+		'cid':cid,
+		'p':p,
+		'lid':lid,
+		'components':components,
+		'quiz':quiz,
+		'check':quizAvail,
+	}
+	
+	return render(request, 'coursemod.html', context)
+
 	
 def quiz(request, lid,qid, cid, p):
 
