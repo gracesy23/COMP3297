@@ -1,0 +1,16 @@
+{% extends 'course/base.html' %}
+
+{% block body %}
+  {% if object_list %}
+    <h1>Hey, these are your course(s)!</h1>
+    <ul>
+      {% for course in object_list %}
+      <li><a href="{% url 'course:detail' course.id %}">{{ course.name }}</a></li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <h3>You don't have any courses</h3>
+  {% endif %}
+
+{% endblock %}
