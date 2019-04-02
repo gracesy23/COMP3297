@@ -1,11 +1,11 @@
 {% if component %}
-<p>{{ component.name }}</p>
+<p>{{ component.name }}{{ component.module_id }}</p>
 {% else %}
 <p>Coming soon</p>
 {% endif %}
 {% if quiz %}
-<p>{{ quiz.name }}</p>
+<p>{{ quiz.name }}{{ quiz.module_id }}</p>
 {% else %}
 <p>Coming soon</p>
 {% endif %}
-<a href="http://127.0.0.1:8000/course/module/17/">back</a>
+<a href="{% url 'course:module' component.module_id  %}">back</a>

@@ -45,6 +45,7 @@ def AddCom(request, pk):
     component.save()
     context = {
         'component' : component,
+        'module' : module,
     }
     return render(request, "course/try.html", context)
 
