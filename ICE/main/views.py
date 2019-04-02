@@ -126,7 +126,8 @@ def loadComp(request):
 	result = {
 	 "title": title,
 	 "quiz": quiz,
-	 "component": componentarray
+	 "component": componentarray,
+	 "cid": cid
 	}
 	
 	return JsonResponse(result)
