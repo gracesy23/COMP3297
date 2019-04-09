@@ -40,10 +40,6 @@
     display: block;
     overflow: scroll;
   }
-
-  .module {
-    text-decoration: underline;
-  }
   
   .content {
     grid-column-start: 2;

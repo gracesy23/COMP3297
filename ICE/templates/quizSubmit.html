@@ -15,11 +15,11 @@
 	Congratulations!<br>
 	You have passed this quiz.<br>
 	You are now granted access to the next module.<br>
-	<a href="{% url 'courseModule' lid=lid cid=cid p=p mid=1 counter=1 %}">Great!</a>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Great!</a>
 	{% else %}
 	You failed this quiz!<br>
 	Please review the materials and try again.<br>
-	<a href="{% url 'courseModule' lid=lid cid=cid p=p mid=2 counter=1 %}">Back to the course page</a>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Back to the course page</a>
 	 {% endif %}
     </div>
   </nav>

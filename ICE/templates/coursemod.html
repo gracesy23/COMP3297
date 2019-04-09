@@ -23,7 +23,7 @@
             <nav>
               <ul>
                 {% for m in avamodules %}
-                <li><a class="module" id="m{{m.modID}}">{{m.title}}</a></li>
+                <li><a class="module" id="m{{m.modID}}" onclick="loadModule('{{m}}', '{{mc}}');">{{m.title}}</a></li>
                 {% endfor %}
                 {% for m in unavamodules %}
                 <li>{{m.title}}</li>
@@ -55,78 +55,48 @@
                 {% endif %}
               </div>
             </nav>
-            <div id="quizbuttondiv">
-              <button class="quizbutton" id="quizbutton0">Attemp Quiz</button><br>
-            </div>
+            <button id="quizbutton">Attemp Quiz</button><br>
             <p></p>
             <a id="coursebutton" href="{% url 'learner' id=1 %}">Back to Courses</a>
-            <p id="testEvent">Hi</p>
           </div>
-        </div>
+          </div>
 
-        <script>
-          $(".sidebar").css("border-right", "2px solid black");
-          $(document).ready(function () {
+          <script>
+            $(".sidebar").css("border-right", "2px solid black");
+            $(document).ready(function () {
 
-            $(".quizbutton").click(function () {
-              console.log("test");
-              var link = "{% url 'quiz' lid=lid qid=1 cid=cid p=p %}";
-              window.open(link, '_blank');
-            });
+              $("#quizbutton").click(function () {
+                var link = "{% url 'quiz' 0 1 2 1 %}";
+                window.open(link, '_blank');
+              });
 
+              $(".module").click(function () {
+                var mid = this.id.slice(1);
+                console.log(mid);
+                $.getJSON("/learner/coursemod/loadComp/", { 'lid': 1, 'mid': mid, 'cid': 1, 'p': 1, 'counter': 1 }, function (ret) {
+                  //console.log(ret);
+                  $("#componentul").html("");
+                  for (x in ret.component) {
 
+                    if (ret.component[x].includes(".jpg")) {
+                      $("#componentul").append('<li>' + '<img src="/static/' + ret.component[x] + '" alt="Image">' + '</li>');
+                    }
+                    else {
+                      $("#componentul").append('<li>' + ret.component[x] + '</li>');
+                    }
 
-            $(".module").click(function () {
-              var mid = this.id.slice(1);
-
-              $.getJSON("/learner/coursemod/loadComp/", { 'lid': 1, 'mid': mid, 'cid': 2, 'p': 1, 'counter': 1 }, function (ret) {
-                //console.log(ret);
-                $("#componentul").html("");
-                for (x in ret.component) {
-
-                  if (ret.component[x].includes(".jpg")) {
-                    $("#componentul").append('<li>' + '<img src="/static/' + ret.component[x] + '" alt="Image">' + '</li>');
                   }
-                  else {
-                    $("#componentul").append('<li>' + ret.component[x] + '</li>');
-                  }
 
-                }
-                $("#quizbuttondiv").html("");
-                $("#quizbuttondiv").append('<button class="quizbutton" id="quizbutton1">Attemp Quiz</button>');
-
-
-                $(".quizbutton").click(function () {
-
-                  var link = "{% url 'quiz' lid=lid qid=1 cid=cid p=p %}";
-                  window.open(link, '_blank');
-                });
-              })
+                })
+              });
             });
-
-            if (typeof (EventSource) !== "undefined") {
-              //create an object, passing it the name and location of the server side script
-              var eSource = new EventSource("/learner/course/module/quiz/check/");
-              //detect message receipt
-              eSource.onmessage = function (event) {
-                //write the received data to the page
-                document.getElementById("testEvent").innerHTML = event.data;
-              };
+            function loadModule(m, mc) {
+              //console.log(mc);
+              var mcontent = "{{mc.content}}";
+              console.log(mcontent);
+              //href="% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %"
             }
-            else {
-              document.getElementById("testEvent").innerHTML = "Whoops! Your browser doesn't receive server-sent events.";
-            }
-
-
-          });
-          function loadModule(m, mc) {
-            //console.log(mc);
-            var mcontent = "{{mc.content}}";
-            console.log(mcontent);
-            //href="% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %"
-          }
-
-        </script>
+          </script>
   </body>
 
   </html>
