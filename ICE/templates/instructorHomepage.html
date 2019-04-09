@@ -1,0 +1,25 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{name}}'s homepage</title>
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{name}}</h1>
+  </header>
+  <nav>
+	Course(s) created by you:
+    <ul>
+      {% for c in courses %}
+	  <li><a href="{% url 'instructor' iid=iid cid=c.courseID %}">{{c.title}}</a></li>
+      {% endfor %}
+    </ul>
+	<a href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
+	<br><a href="{% url 'logout' %}">Log out</a>
+  </nav>
+  <footer>
+    
+  </footer>
+</body>
+</html>

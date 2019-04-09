@@ -1,93 +1,33 @@
 <DOCTYPE! html>
-  <html lang="en">
-
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
-    <title>Learner's homepage</title>
-  </head>
-
-  <body>
-    <div class="headcontainer">
-      <div class="header">
-        <h1>Welcome, {{name}}</h1>
-      </div>
-      <div class="cart">
-      </div>
-
-      <div id="container">
-        <div class="grid sidebar">
-
-          <div id="module-list">
-            <h3>Module</h3>
-
-            <ul>
-              <h4>Test2</h4>
-              {% for m in avamodules %}
-              <li><a href="{% url 'module' 2 1 1 counter=m.counter %}">{{m.title}}</a></li>
-              {% endfor %}
-              {% for m in unavamodules %}
-              <li>{{m.title}}</li>
-              {% endfor %}
-            </ul>
-
-          </div>
-        </div>
-
-        <div class="grid content">
-          <div id="course-list">
-            <h3>Course List</h3>
-            <h4>These are the courses you are currently taking:</h4>
-            <div class="course-container">
-              <div id="courses">
-                <nav>
-                  <ul>
-                    {% for Course in courses %}
-                    <li><a
-                        href="{% url 'courseModule' lid=lid p=Course.progress cid=Course.courseID mid=1 counter=1 %}">{{Course.title}},
-                        finished
-                        modules: {{Course.progress}}</a></li><br>
-                  
-                    {% endfor %}
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div id="component-list">
-            <h3>Component</h3>
-            <button id="quizbutton">Attemp Quiz</button><br>
-            <p></p>
-            <button id="coursebutton">Back to Courses</button>
-          </div>
-
-          <script>
-            $(document).ready(function () {
-              $("#module-list").hide();
-              $("#component-list").hide();
-              $("#coursebut1").click(function () {
-                $("#course-list").hide();
-                $("#module-list").show();
-                $("#component-list").show();
-                $(".sidebar").css("border-right", "2px solid black");
-              });
-              $("#coursebutton").click(function () {
-                $("#course-list").show();
-                $("#module-list").hide();
-                $("#component-list").hide();
-                $(".sidebar").css("border-right", "0px");
-              });
-              $("#quizbutton").click(function () {
-                var link = "{% url 'quiz' 0 1 2 1 %}";
-                window.open(link, '_blank');
-
-              });
-
-            });
-          </script>
-  </body>
-
-  </html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>Learner's homepage</title>
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{name}}</h1>
+  </header>
+  <div class = 'container'>
+  <h2>These are the courses you are currently taking</h2>
+  <h3><a href="{% url 'logout' %}">Log out</a></h3>
+  <nav>
+    <ul>
+      {% for Course in courses %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
+	  {% endfor %}
+	  {% for Course in passed %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
+	  {% endfor %}
+	</ul>
+  </nav>
+  </div>
+  <div>
+  <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
+  </div>
+  <footer>
+    ICE -one tool to learn it all
+  </footer>
+</body>
+</html>
