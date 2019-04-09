@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import random
 from django.db.models import Max
 from .forms import ChangeForm
 from .forms import AddForm
@@ -6,25 +7,159 @@ from .models import *
 from django.http import HttpResponse
 import json
 from django.http import JsonResponse
+from django.core.mail import send_mail
+import datetime
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse
+from django.views import generic
 
-# Create your views here.
+
+#token check page
+def newaccount(request):
+	if request.method == "POST":
+		form = request.POST
+		temp = form.get('token')
+		counter = 0
+		token = Token.objects.filter(token = temp)
+		for a in token:
+			counter = counter + 1
+		if counter == 1:
+			token = Token.objects.get(token = temp)
+			context = {
+				'Token':token
+			}
+			return render(request,'registration.html',context)
+		else:
+			return render(request,'wrongtoken.html')
+	else:
+		return render(request,'token.html')
+
+#role: 1 for learner 2 for ins 3 for admin
+#django sign_up
+class SignUp(generic.CreateView):
+	form_class = UserCreationForm
+	def get_success_url(self,*args):
+		return reverse('registrate', kwargs={'username': self.object.username,'token':self.kwargs['token']})
+	template_name = 'signup.html'
+
+def newaccount_sup(request,username,token):
+		id = token
+		token = Token.objects.get(token = id)
+		staff = Staff.objects.get(staffID = token.staffID)
+		if token.role == 1:
+			learner = Learner.objects.all().order_by('learnerID').last()
+			lid = learner.learnerID + 1
+			temp = UserLogin()
+			temp.username = username
+			temp.role = 1
+			temp.userID = lid
+			temp.save()
+			temp = Learner()
+			temp.learnerID = lid
+			temp.learnerName = staff.first_name
+			temp.takecourse = 0
+			temp.progress = 0
+			temp.save()
+			return render(request,'regsucc.html')
+		else:
+			instructor = Instructor.objects.all().order_by('instructorID').last()
+			iid = instructor.learnerID + 1
+			temp = UserLogin()
+			temp.username = username
+			temp.role = 2
+			temp.userID = iid
+			temp.save()
+		return render(request,'regsucc.html')
+	
+def learner_signup(request):
+	if(request.method == "POST"):
+		form = request.POST
+		staff = Staff.objects.filter(staffID = form.get('staffID'))
+		counter = 0
+		for a in staff:
+			counter = counter + 1
+		if counter == 1:
+			staff = Staff.objects.get(staffID = form.get('staffID'))
+			address = staff.email
+			temp = ''
+			for x in range(6):
+				temp = temp + str(random.randint(1,10))
+			while Token.objects.filter(token = temp).exists():
+				temp = ''
+				for x in range(6):
+					temp = temp + str(random.randint(1,10))
+			token = Token()
+			token.token = temp
+			token.role = 1
+			token.staffID = staff.staffID
+			token.save()
+			msg = 'You have just applied for ICE learner account. Your token is: '
+			msg = msg + temp
+			msg = msg + '\n' + 'Please go to this link to complete the registration:\n'
+			msg = msg + '127.0.0.1:8000/newaccount \n'
+			send_mail(
+			'ICE learner registration',
+			msg,
+			'ICE@gmail.com',
+			[address],
+			fail_silently=False,
+			)
+			return render(request,'appsucc.html')
+		else:
+			return render(request,'appfail.html')
+	else:
+		return render(request,'learner_apply.html')
+	
+#learner homepage
+def redirect(request):
+	name = request.user.username
+	user = UserLogin.objects.get(username = name)
+	if user.role == 1:
+		return learner(request, user.userID)
+	elif user.role == 2:
+		return instructorHome(request,user.userID)
+	else:
+		return administrator(request)
+		
+def sendmail(request):
+	form = request.POST
+	address = form.get('email')
+	send_mail(
+    'Invitation',
+    'Come on come on join us',
+    'ICE@gmail.com',
+    [address],
+    fail_silently=False,
+	)
+	return administrator(request)
+		
+def administrator(request):
+	return render(request,'admin.html')
+
 def learner(request, id):
 
 	learner = Learner.objects.filter(learnerID = id)
 	courses = []
+	passed = []
 	for a in learner:
 		temp = Temp()
 		name = a.learnerName
-		course = Course.objects.filter(courseID = a.takecourse)
-		for c in course:
-			temp.courseID = c.courseID
-			temp.title = c.title
-			temp.progress = a.progress
-		courses.append(temp)
+		if a.takecourse != 0:
+			temp.pass_date = a.pass_date
+			course = Course.objects.filter(courseID = a.takecourse)
+			for c in course:
+				temp.courseID = c.courseID
+				temp.title = c.title
+				temp.progress = a.progress
+			if a.progress != 100:
+				courses.append(temp)
+			else:
+				passed.append(temp)
 	context = {
 		'lid': id,
 		'name': name,
-		'courses': courses
+		'courses': courses,
+		'passed':passed
 	}
 	
 	return render(request, 'learner.html', context)
@@ -38,6 +173,9 @@ def course(request,p,cid,lid):
 	course = Course.objects.filter(courseID = cid)
 	avamodules = []
 	unavamodules = []
+	check = 0
+	if p == 0:
+		check = 1
 	i = 0
 	n = 0
 	p = int(p)
@@ -63,7 +201,10 @@ def course(request,p,cid,lid):
 					mod.title =  b.moduleTitle
 				unavamodules.append(mod)
 				i = i + 1
-	
+	if p == n:
+		learner.progress = 100
+		learner.pass_date = datetime.datetime.now()
+		learner.save()
 	context = {
 		'title': title,
 		'avamodules': avamodules,
@@ -71,7 +212,9 @@ def course(request,p,cid,lid):
 		'counter': n,
 		'cid':cid,
 		'p':p,
-		'lid':lid
+		'lid':lid,
+		'check':check,
+		'name':learner.learnerName
 	}
 	
 	return render(request, 'course.html', context)
@@ -130,7 +273,6 @@ def loadComp(request):
 	}
 	
 	return JsonResponse(result)
-
 
 def courseModule(request,p,cid,lid,mid,counter):
 	learner = Learner.objects.get(takecourse = cid, learnerID = lid)
@@ -191,7 +333,6 @@ def courseModule(request,p,cid,lid,mid,counter):
 	
 	return render(request, 'coursemod.html', context)
 
-	
 def quiz(request, lid,qid, cid, p):
 
 	quiz = Quiz.objects.filter(quizID = qid)
@@ -331,6 +472,9 @@ def addQuiz(request,mid,iid,cid):
 	return moduleIns(request, mid,iid,cid)
 		
 def quizCheck(request,qid,p,lid,cid):	
+
+
+
 	quiz = Quiz.objects.filter(quizID = qid)
 	form = request.POST
 	total = 0
@@ -362,5 +506,98 @@ def quizCheck(request,qid,p,lid,cid):
 		
 	return render(request,'quizSubmit.html',context)	
 		
+def instructorHome(request, iid):
+
+	instructor = Instructor.objects.filter(instructorID = iid)
+	courses = []
+	for a in instructor:
+		temp = Temp()
+		name = a.name
+		course = Course.objects.filter(courseID = a.create_course)
+		for c in course:
+			temp.courseID = c.courseID
+			temp.title = c.title
+			temp.progress = c.created_by
+		courses.append(temp)
+	context = {
+		'iid': iid,
+		'name': name,
+		'courses': courses
+	}
+	
+	return render(request, 'instructorHomepage.html', context)
 		
+def create_new_course(request,iid):
+	if(request.method == "POST"):
+		form = request.POST
+		course = Course()
+		cid = Course.objects.all().latest('courseID')
+		cid = cid.courseID + 1
+		course.courseID = cid
+		course.created_by = iid
+		course.title = form.get('course_title')
+		course.contains_modules = 0
+		course.save()
+		instructor = Instructor()
+		temp = Instructor.objects.filter(instructorID = iid).first()
+		instructor.name = temp.name
+		instructor.instructorID = iid
+		instructor.create_course = cid
+		instructor.save()
+		return instructorHome(request,iid)
+	else:
+		context = {
+			'iid':iid
+		}
+		return render(request, 'new_course.html',context)
+	
+def view_all_courses(request,lid,cate,alert):
+	learner = Learner.objects.filter(learnerID = lid)
+	enrolled_courses = []
+	for a in learner:
+		enrolled_courses.append(a.takecourse)
+	
+	courses = []
+	if cate == '0':
+		course = Course.objects.all().order_by('courseID')
+		cid = 0
+		for c in course:
+			if c.courseID != cid:
+				cid = c.courseID
+				temp = CourseT()
+				temp.courseID = cid
+				temp.title = c.title
+				temp.description = c.description
+				temp.enroll = 1
+				for a in enrolled_courses:
+					if cid == a:
+						temp.enroll = 0
+				instructor = Instructor.objects.get(create_course = cid)
+				temp.taught_by = instructor.name
+				courses.append(temp)
+	
 		
+	
+	context = {
+		'courses':courses,
+		'lid':lid,
+		'alert':alert
+	}
+	
+	return render(request, 'view_all_courses.html',context)
+	
+def enroll(request,lid,cid):
+	learner = Learner.objects.all().first()
+	new_learner = Learner()
+	new_learner.learnerID = lid
+	new_learner.learnerName = learner.learnerName
+	new_learner.takecourse = cid
+	new_learner.progress = 0
+	new_learner.save()
+	
+	return view_all_courses(request,lid,'0',1)
+
+	
+	
+	
+	

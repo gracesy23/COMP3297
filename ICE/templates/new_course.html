@@ -1,0 +1,26 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Create a new course</title>
+</head>
+<body>
+  <header>
+    <h1>Create a new course</h1>
+  </header>
+  <nav>
+   <div>
+   <form  method='POST' action='{% url "create_new_course" iid=iid %}'>
+     {% csrf_token %}
+   Course title: 
+   <input type="text" name="course_title" value=""><br>
+   Course description:
+   <textarea name="course_description"></textarea><br>
+   <input type="submit" name="b" value="Create">
+  </form>
+   </div>
+  </nav>
+	<footer>
+	</footer>
+</body>
+</html>

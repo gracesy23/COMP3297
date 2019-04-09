@@ -1,0 +1,23 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>ICE registration</title>
+</head>
+<body>
+	<header>
+    <h1>Please enter your token</h1>
+	</header>
+	<nav>
+    <form  method='POST' action='{% url "newaccount" %}'>
+	{% csrf_token %}
+	Please input the token:
+	<input type="text" name="token">
+	<input type="submit" name="b" value="Submit">
+	</form>
+	</nav>
+	<footer>
+    
+	</footer>
+</body>
+</html>

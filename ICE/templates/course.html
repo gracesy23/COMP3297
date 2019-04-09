@@ -29,7 +29,9 @@
                 {% for m in unavamodules %}
                 <li>{{m.title}}</li>
                 {% endfor %}
+				
               </ul>
+			  <a href="{% url 'learner' id=lid %}">Back to homepage</a>
             </nav>
 
 

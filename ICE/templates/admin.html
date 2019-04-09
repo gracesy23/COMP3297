@@ -1,0 +1,23 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Administrator</title>
+</head>
+<body>
+	<header>
+    <h1>Welcome, admin</h1>
+	</header>
+	<nav>
+	<form  method='POST' action='{% url "sendmail" %}'>
+     {% csrf_token %}
+   Input the email address
+   <input type="text" name="email" >
+  <input type="submit" name="b" value="Send">
+  </form>
+	</nav>
+	<footer>
+    
+	</footer>
+</body>
+</html>
