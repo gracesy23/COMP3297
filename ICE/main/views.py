@@ -188,6 +188,7 @@ def courseModule(request,p,cid,lid,mid,counter):
 		'components':components,
 		'quiz':quiz,
 		'check':quizAvail,
+		'name':learner.learnerName
 	}
 	
 	return render(request, 'coursemod.html', context)
