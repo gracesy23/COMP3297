@@ -1,0 +1,102 @@
+<DOCTYPE! html>
+  <html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>{{title}}</title>
+  </head>
+
+  <body>
+    <div class="headcontainer">
+      <div class="header">
+        <h2>Welcome, {{name}}</h2>
+      </div>
+
+      <div id="container">
+        <div class="grid sidebar">
+
+          <div id="module-list">
+            <h3>Modules</h3>
+            <nav>
+              <ul>
+                {% for m in avamodules %}
+                <li><a class="module" id="m{{m.modID}}" onclick="loadModule('{{m}}', '{{mc}}');">{{m.title}}</a></li>
+                {% endfor %}
+                {% for m in unavamodules %}
+                <li>{{m.title}}</li>
+                {% endfor %}
+              </ul>
+            </nav>
+
+
+          </div>
+        </div>
+
+        <div class="grid content">
+          <div id="component-list">
+            <h3>Components</h3>
+            <nav>
+              <ul id="componentul">
+                {% for m in components %}
+                {% if m.componentType == 1 %}
+                <li>{{m.content}}</li>
+                {% else %}
+                <li>{% load staticfiles %}
+                  <img src="{% static m.content %}" alt="Image"></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+              <div>
+                {% if check == 1 %}
+                <a href="{% url 'quiz' lid=lid qid=quiz p=p cid=cid %}">Take the quiz</a>
+                {% endif %}
+              </div>
+            </nav>
+            <button id="quizbutton">Attemp Quiz</button><br>
+            <p></p>
+            <a id="coursebutton" href="{% url 'learner' id=1 %}">Back to Courses</a>
+          </div>
+          </div>
+
+          <script>
+            $(".sidebar").css("border-right", "2px solid black");
+            $(document).ready(function () {
+
+              $("#quizbutton").click(function () {
+                var link = "{% url 'quiz' 0 1 2 1 %}";
+                window.open(link, '_blank');
+              });
+
+              $(".module").click(function () {
+                var mid = this.id.slice(1);
+                console.log(mid);
+                $.getJSON("/learner/coursemod/loadComp/", { 'lid': 1, 'mid': mid, 'cid': 1, 'p': 1, 'counter': 1 }, function (ret) {
+                  //console.log(ret);
+                  $("#componentul").html("");
+                  for (x in ret.component) {
+
+                    if (ret.component[x].includes(".jpg")) {
+                      $("#componentul").append('<li>' + '<img src="/static/' + ret.component[x] + '" alt="Image">' + '</li>');
+                    }
+                    else {
+                      $("#componentul").append('<li>' + ret.component[x] + '</li>');
+                    }
+
+                  }
+
+                })
+              });
+            });
+            function loadModule(m, mc) {
+              //console.log(mc);
+              var mcontent = "{{mc.content}}";
+              console.log(mcontent);
+              //href="% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %"
+            }
+          </script>
+  </body>
+
+  </html>
