@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
     <title>Learner's homepage</title>
   </head>
 
-  <body>
+  <body ng-app="myApp">
     <div class="headcontainer">
       <div class="header">
         <h1>Welcome, {{name}}</h1>
@@ -62,6 +63,23 @@
           </div>
 
           <script>
+            var app = angular.module("myApp", ["ngRoute"]);
+            app.config(function($routeProvider) {
+            $routeProvider
+            .when("/", {
+              templateUrl : "main.htm"
+               })
+                .when("/red", {
+               templateUrl : "red.htm"
+             })
+         .when("/green", {
+        templateUrl : "green.htm"
+    })
+    .when("/blue", {
+        templateUrl : "blue.htm"
+    });
+});
+
             $(document).ready(function () {
               $("#module-list").hide();
              // $("#component-list").hide();
