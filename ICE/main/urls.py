@@ -6,11 +6,12 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('learnersignup/', views.learner_signup, name='learner_signup'),
-	path('signup/(?P<token>\d+)', views.SignUp.as_view(), name='signup'),
+	url(r'^signup/(?P<token>\d+)/$', views.SignUp.as_view(), name='signup'),
 	path('newaccount', views.newaccount, name='newaccount'),
 	url(r'^account/confirm/(?P<token>\w+)/(?P<username>\w+)/', views.newaccount_sup, name='registrate'),
-	url(r'^login/$', auth_views.LoginView.as_view(), name='login'),
+	url(r'^accounts/login/$', auth_views.LoginView.as_view(), name='login'),
 	url(r'^redirect/$', views.redirect),
+	url(r'^loggedout/$', views.loggedout),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
 	url(r'^learner/(?P<id>\d+)/$', views.learner, name = 'learner'),
 	url(r'^instructor/create/(?P<iid>\d+)/$', views.create_new_course, name = 'create_new_course'),
