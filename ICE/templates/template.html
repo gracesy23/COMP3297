@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lab 7</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="/javascripts/externalJS.js"></script>
+</head>
+<body ng-app="contactList" ng-controller="contactListController" ng-init="getContacts()">
+	<h1>Lab 7</h1>
+	<p>Welcome to lab 7.</p>
+
+    <div id="wrapper">
+      <div id="contactInfo">
+        <h2>Contact Info</h2>
+        <p id="leftP">
+          <strong>Name:</strong><span>{{selected_contact.name}}</span> <br>
+          <strong>Telephone:</strong>{{selected_contact.tel}}</span> <br>
+          <strong>Email:</strong>{{selected_contact.email}}</span>
+        </p>
+      </div>
+
+      <h2>Contact List</h2>
+
+      <div id="contactList">
+        <table>
+          <thead>
+            <th>Name</th>
+            <th>Delete?</th>
+          </thead>
+          
+          <tbody>
+              <tr ng-repeat="contact in contacts">
+                  <td> <a href="" ng-click="showContact(contact)">{{contact.name}}</a></td>
+                  <td> <a href="" ng-click="deleteContact(contact._id)">delete</a></td>
+            </tr>
+    
+          </tbody>
+        </table>
+      </div>
+      
+      <h2>Add/Update Contact</h2>
+      
+      <div id="addContact">
+        <fieldset>
+          <input type="text" placeholder="Name" ng-model="contact_input.name"><br>
+          <input type="text" placeholder="Telephone Number" ng-model="contact_input.tel"><br>
+          <input type="text" placeholder="Email" ng-model="contact_input.email"><br>
+          <button class="myButton" ng-click="addOrUpdateContact(contact_input)">Add/Update Contact</button>
+        </fieldset>
+      </div>
+    </div>
+    
+</body>
+</html>
