@@ -11,6 +11,7 @@
   </header>
   <div class = 'container'>
   <h2>These are the courses you are currently taking</h2>
+  <h3><a href="{% url 'logout' %}">Log out</a></h3>
   <nav>
     <ul>
       {% for Course in courses %}
