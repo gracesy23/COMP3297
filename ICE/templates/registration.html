@@ -1,0 +1,23 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>ICE registration</title>
+</head>
+<body>
+	<header>
+    <h1>ICE registration</h1>
+	</header>
+	<nav>
+    {% if Token.role == 1 %}
+	You will registrate as "Learner".
+	{% else %}
+	You will registrate as "Instructor".
+	{% endif %}
+	<a href="{% url 'signup' token=Token.token %}">Proceed</a>
+	</nav>
+	<footer>
+    
+	</footer>
+</body>
+</html>

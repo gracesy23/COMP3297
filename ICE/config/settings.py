@@ -100,7 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+LOGIN_REDIRECT_URL = '/redirect'
+LOGOUT_REDIRECT_URL = '/loggedout'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -123,3 +124,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
 	STAT,
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'gaoyihansteve@gmail.com'
+EMAIL_HOST_PASSWORD = 'Gyh5102696'
+DEFAULT_FROM_EMAIL = 'ICE@gmail.com'
