@@ -6,16 +6,7 @@
 
 {% block sidebar %}
 <div id="module-list">
-                      
-
-	<a href="#!course">course</a><br>
-	<a href="#!green">Green</a>
-	<a href="#!blue">Blue</a>
-
-
-
-</div>
-<nav>
+	<nav>
     <ul>
       {% for m in avamodules %}
 	  <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}">{{m.title}}</a></li>
@@ -24,7 +15,10 @@
 	  <li>{{m.title}}</li>
 	  {% endfor %}
 	  </ul>
-  </nav>
+  </nav>          
+
+</div>
+
 {% endblock %}
 
 {% block content %}
