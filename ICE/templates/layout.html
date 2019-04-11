@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewpoint" content="width=device-width" , initial-scale="1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
+    {% block header %}
+    {% endblock %}
+</head>
+
+<body ng-app="myApp">
+
+    <div class="headcontainer">
+        <div class="header">
+            <h2>ICE</h2>
+        </div>
+
+        <div id="container">
+            <div class="grid sidebar">
+                {% block sidebar %}
+
+                {% endblock %}
+
+            </div>
+
+            <div class="grid content">
+                <div id="component-list">
+                    <div ng-view>
+                    </div>
+                    {% block content %} 
+                    {% endblock %}
+                </div>
+            </div>
+
+
+
+            <script>
+                var app = angular.module("myApp", ["ngRoute"]);
+                app.config(function ($routeProvider) {
+                    $routeProvider
+                        .when("/course", {
+                            templateUrl: "/learner/course/0/1/7/"
+                        })
+                        .when("/green", {
+                            templateUrl: "instructor.html"
+                        })
+                        .when("/blue", {
+                            templateUrl: "instructor.html"
+                        });
+                });
+            </script>
+</body>
+
+</html>

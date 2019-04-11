@@ -1,3 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<title>ICE</title>
+{% endblock %}
+
+{% block content %}
+  <nav>
+    <ul>
+      {% for Course in courses %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
+	  {% endfor %}
+	  {% for Course in passed %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
+	  {% endfor %}
+	</ul>
+  </nav>
+{% endblock %}
 <DOCTYPE! html>
 <html lang="en">
 <head>
