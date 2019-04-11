@@ -92,23 +92,8 @@
                 </div>
             </div>
 
-
-
-            <script>
-                var app = angular.module("myApp", ["ngRoute"]);
-                app.config(function ($routeProvider) {
-                    $routeProvider
-                        .when("/course", {
-                            templateUrl: "/learner/course/module/1/1/0/7/1/"
-                        })
-                        .when("/green", {
-                            templateUrl: "quiz.html"
-                        })
-                        .when("/blue", {
-                            templateUrl: "quiz.html"
-                        });
-                });
-            </script>
+            {% block script %} 
+            {% endblock %}
 </body>
 
 </html>
