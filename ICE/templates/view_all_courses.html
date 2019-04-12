@@ -1,3 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<title></title>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>All courses</h1>
+	</header>
+	<nav>
+    {% if alert == 1 %}
+	<div class="alert">
+	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+	You have successfully enrolled in the course!
+	</div>
+	{% endif %}
+	<ul>
+		{% for c in courses %}
+		<li>{{c.title}} 
+		{% if c.enroll == 1 %}<a href="{% url 'enroll' lid=lid cid=c.courseID %}">Enroll</a><br>
+		{% else %}You have already enrolled in this course!<br>
+		{% endif %}
+		Taught by: {{c.taught_by}}<br>
+		{{c.description}}</li><br>
+		{% endfor %}
+    </ul>
+	</nav>
+	<footer>
+    <a href="{% url 'learner' id=lid %}">Back to homepage</a>
+	</footer>
+
+{% endblock %}
+
+
 <DOCTYPE! html>
 <html lang="en">
 <head>

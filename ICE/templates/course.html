@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block sidebar %}
-<div id="module-list">
+<div id="module-list" >
 	<nav>
     <ul>
       {% for m in avamodules %}
-	  <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}">{{m.title}}</a></li>
+	  <li><a class="avamodule" href="#" ng-click="nav('{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}')">{{m.title}}</a></li>
 	  {% endfor %}
 	  {% for m in unavamodules %}
-	  <li>{{m.title}}</li>
+	  <li><h5 class="unavamodule">{{m.title}}</h5></li>
 	  {% endfor %}
 	  </ul>
   </nav>          
@@ -22,24 +22,36 @@
 {% endblock %}
 
 {% block content %}
-
+  <div>
+			<div ng-include="filePath"></div>
+		</div>
 {% endblock %}
 
 {% block script %}
 <script>
-	var app = angular.module("myApp", ["ngRoute"]);
-	app.config(function ($routeProvider) {
-			$routeProvider
-					.when("/course", {
-							templateUrl: "/learner/course/module/1/1/0/7/1/"
-					})
-					.when("/green", {
-							templateUrl: "quiz.html"
-					})
-					.when("/blue", {
-							templateUrl: "quiz.html"
-					});
-	});
+	$(document).ready(function() {
+		
+
+
+});
+var link = '/learner/course/module/2/1/101/7/2/';
+function displayModuleComp(elem){
+		link = elem.id;
+		console.log(link);
+		
+	}
+
+	(function(angular) {
+  'use strict';
+
+  app.controller('ICEAppController', ['$scope', function($scope) {
+		$scope.nav = function(path) {
+    $scope.filePath = path;
+};
+  }]);
+})(window.angular);
+
+
 </script>
 {% endblock %}
 

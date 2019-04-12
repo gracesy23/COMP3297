@@ -1,99 +1,130 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewpoint" content="width=device-width" , initial-scale="1.0" />
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% block header %} {% endblock %} {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}" />
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+      integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+      crossorigin="anonymous"
+    />
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-1.12.4.min.js"
+      integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+      crossorigin="anonymous"
+    ></script>
+    <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
-    {% block header %}
-    {% endblock %}
-</head>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+      integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-<body ng-app="myApp">
-
+  <body ng-app="ICEApp" ng-controller="ICEAppController">
     <div class="headcontainer">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <!-- Header -->
+          <div class="navbar-header">
+            <button
+              type="button"
+              class="navbar-toggle"
+              data-toggle="collapse"
+              data-target="#topNavbar"
+            >
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'learner' id=lid %}">ICE</a>
+          </div>
 
+          <!-- Item -->
+          <div class="collapse navbar-collapse" id="topNavbar">
+            <ul class="nav navbar-nav">
+              <li class="">
+                <a href="{% url 'learner' id=lid %}">
+                  <span
+                    class="glyphicon glyphicon-book"
+                    aria-hidden="true"
+                  ></span
+                  >&nbsp; Course
+                </a>
+              </li>
 
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-        
-              <!-- Header -->
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavbar">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="">ICE</a>
+              <li class="">
+                <a href="#">
+                  <span
+                    class="glyphicon glyphicon-time"
+                    aria-hidden="true"
+                  ></span
+                  >&nbsp; History
+                </a>
+              </li>
+            </ul>
+
+            <form
+              class="navbar-form navbar-left"
+              role="search"
+              method="get"
+              action="#"
+            >
+              <div class="form-group">
+                <input type="text" class="form-control" name="q" value="" />
               </div>
-        
-              <!-- Item -->
-              <div class="collapse navbar-collapse" id="topNavbar">
-                <ul class="nav navbar-nav">
-                  <li class="">
-                    <a href="">
-                      <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp; Course
-                    </a>
-                  </li>
-        
-                  <li class="">
-                    <a href="#">
-                      <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; History
-                    </a>
-                  </li>
-                </ul>
-        
-                <form class="navbar-form navbar-left" role="search" method="get" action="#">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="q" value="">
-                  </div>
-                  <button type="submit" class="btn btn-default">Search</button>
-                </form>
-        
-                <ul class="nav navbar-nav navbar-right">
-                  <li class="">
-                    <a href="#">
-                      <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp; Log-out
-                    </a>
-                  </li>
-                  <li class="">
-                    <a href="">
-                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Course
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
+              <button type="submit" class="btn btn-default">Search</button>
+            </form>
 
+            <ul class="nav navbar-nav navbar-right">
+              <li class="">
+                <a href="{% url 'logout' %}">
+                  <span
+                    class="glyphicon glyphicon-log-out"
+                    aria-hidden="true"
+                  ></span
+                  >&nbsp; Log-out
+                </a>
+              </li>
+              <li class="">
+                <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">
+                  <span
+                    class="glyphicon glyphicon-plus"
+                    aria-hidden="true"
+                  ></span
+                  >&nbsp; Add Course
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div id="container">
+      <div class="grid sidebar">
+        {% block sidebar %} {% endblock %}
+      </div>
 
-        <div id="container">
-            <div class="grid sidebar">
-                {% block sidebar %}
+      <div class="grid content">
+        <div id="component-list">
+          <div ng-view></div>
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+    </div>
 
-                {% endblock %}
-
-            
-
-            </div>
-
-            <div class="grid content">
-                <div id="component-list">
-                    <div ng-view>
-                    </div>
-                    {% block content %} 
-                    {% endblock %}
-                </div>
-            </div>
-
-            {% block script %} 
-            {% endblock %}
-</body>
-
+    <script>
+      var app = angular.module("ICEApp", ["ngRoute"]);
+    </script>
+    {% block script %} {% endblock %}
+  </body>
 </html>
