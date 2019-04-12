@@ -22,24 +22,21 @@
 {% endblock %}
 
 {% block content %}
-  <div>
-			<div ng-include="filePath"></div>
+  	<div>
+			{% with avamodules|last as last %}
+			<div ng-include="filePath || '{% url 'module' lid=lid mid=last.modID p=p cid=cid counter=last.counter %}'"></div>
+
+		{% endwith %}
+
 		</div>
 {% endblock %}
 
 {% block script %}
 <script>
 	$(document).ready(function() {
-		
-
+	
 
 });
-var link = '/learner/course/module/2/1/101/7/2/';
-function displayModuleComp(elem){
-		link = elem.id;
-		console.log(link);
-		
-	}
 
 	(function(angular) {
   'use strict';
