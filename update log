@@ -1,0 +1,4 @@
+patch 04/13:
+-Instructor can no longer create courses with empty title.
+-Fixed the bug that learner's name sometimes changes after enrolling in a course.
+-Fixed the bug that learner can take the quiz of some modules even after they have passed that course already
