@@ -13,6 +13,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
 
 
 #token check page
@@ -48,8 +49,11 @@ def newaccount_sup(request,username,token):
 		token = Token.objects.get(token = id)
 		if token.role == 1:
 			staff = Staff.objects.get(staffID = token.staffID)
-			learner = Learner.objects.all().order_by('learnerID').last()
-			lid = learner.learnerID + 1
+			if Learner.objects.all().count()!=0:
+				learner = Learner.objects.all().order_by('learnerID').last()
+				lid = learner.learnerID + 1
+			else:
+				lid = 1
 			temp = UserLogin()
 			temp.username = username
 			temp.role = 1
@@ -63,8 +67,11 @@ def newaccount_sup(request,username,token):
 			temp.save()
 			return render(request,'regsucc.html')
 		else:
-			instructor = Instructor.objects.all().order_by('instructorID').last()
-			iid = instructor.instructorID + 1
+			if Instructor.objects.all().count()!=0:
+				instructor = Instructor.objects.all().order_by('instructorID').last()
+				iid = instructor.instructorID + 1
+			else:
+				iid = 1
 			temp = UserLogin()
 			temp.username = username
 			temp.role = 2
@@ -75,7 +82,7 @@ def newaccount_sup(request,username,token):
 			temp.name = username
 			temp.create_course = 0
 			temp.save()
-		return render(request,'regsucc.html')
+			return render(request,'regsucc.html')
 	
 def learner_signup(request):
 	if(request.method == "POST"):
@@ -89,11 +96,11 @@ def learner_signup(request):
 			address = staff.email
 			temp = ''
 			for x in range(6):
-				temp = temp + str(random.randint(1,10))
+				temp = temp + str(random.randint(1,9))
 			while Token.objects.filter(token = temp).exists():
 				temp = ''
 				for x in range(6):
-					temp = temp + str(random.randint(1,10))
+					temp = temp + str(random.randint(1,9))
 			token = Token()
 			token.token = temp
 			token.role = 1
@@ -180,7 +187,7 @@ def learner(request, id):
 					temp.courseID = c.courseID
 					temp.title = c.title
 					temp.progress = a.progress
-				if a.progress != 100:
+				if a.progress < 100:
 					courses.append(temp)
 				else:
 					passed.append(temp)
@@ -221,9 +228,9 @@ def course(request,p,cid,lid):
 		for a in course:
 			mod = ModuleT()
 			title = a.title
-			n = n + 1
-			mod.counter = n
 			if a.contains_modules != 0:
+				n = n + 1
+				mod.counter = n
 				if i <= p:
 					allmod = Module.objects.filter(moduleID = a.contains_modules)
 					for b in allmod:
@@ -267,7 +274,7 @@ def module(request, lid,mid,cid,p,counter):
 		module = Module.objects.filter(moduleID = mid)
 		components = []
 		quizAvail = 0
-		if p < counter:
+		if int(p) < int(counter):
 			quizAvail = 1
 		for a in module:
 			title = a.moduleTitle
@@ -447,9 +454,12 @@ def createModule(request,iid,cid):
 	temp = UserLogin.objects.get(username = name)
 	iid = int(iid)
 	if temp.role == 2 and temp.userID == iid:
-		mid = Module.objects.all().latest('moduleID')
+		if Module.objects.all().count()!=0:
+			mid = Module.objects.all().latest('moduleID')
+			newmid = mid.moduleID + 1
+		else:
+			newmid = 1
 		course = Course.objects.filter(courseID = cid)
-		newmid = mid.moduleID + 1
 		for c in course:
 			title = c.title
 			created_by = c.created_by
@@ -588,6 +598,7 @@ def quizCheck(request,qid,p,lid,cid):
 			if question.answer == form.get(ans):
 				correct = correct + 1
 		result = correct/total
+		result = round(result,2)
 		if result >= 0.6:
 			passed = 1
 			p = int(p)
@@ -644,21 +655,27 @@ def create_new_course(request,iid):
 	if temp.role == 2 and temp.userID == iid:
 		if(request.method == "POST"):
 			form = request.POST
-			course = Course()
-			cid = Course.objects.all().latest('courseID')
-			cid = cid.courseID + 1
-			course.courseID = cid
-			course.created_by = iid
-			course.title = form.get('course_title')
-			course.contains_modules = 0
-			course.save()
-			instructor = Instructor()
-			temp = Instructor.objects.filter(instructorID = iid).first()
-			instructor.name = temp.name
-			instructor.instructorID = iid
-			instructor.create_course = cid
-			instructor.save()
-			return instructorHome(request,iid)
+			if form.get('course_title') == '':
+				return instructorHome(request,iid)
+			else:
+				course = Course()
+				if Course.objects.all().count()!=0:
+					cid = Course.objects.all().latest('courseID')
+					cid = cid.courseID + 1
+				else:
+					cid = 1
+				course.courseID = cid
+				course.created_by = iid
+				course.title = form.get('course_title')
+				course.contains_modules = 0
+				course.save()
+				instructor = Instructor()
+				temp = Instructor.objects.filter(instructorID = iid).first()
+				instructor.name = temp.name
+				instructor.instructorID = iid
+				instructor.create_course = cid
+				instructor.save()
+				return instructorHome(request,iid)
 		else:
 			context = {
 				'iid':iid
@@ -715,7 +732,7 @@ def enroll(request,lid,cid):
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
-		learner = Learner.objects.all().first()
+		learner = Learner.objects.filter(learnerID = lid).first()
 		new_learner = Learner()
 		new_learner.learnerID = lid
 		new_learner.learnerName = learner.learnerName

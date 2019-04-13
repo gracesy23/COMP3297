@@ -1,6 +1,11 @@
 from django.db import models
 
 # Create your models here.
+class Category(models.Model):
+	cateID = models.IntegerField()
+	title = models.CharField(max_length = 200)
+	contain_course = models.IntegerField()
+
 class Staff(models.Model):
 	staffID = models.IntegerField()
 	email = models.CharField(max_length = 200)
