@@ -1,7 +1,34 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-<title></title>
+<title>Coureses</title>
+<style>
+	.tooltip2 {
+	  position: relative;
+	  display: inline-block;
+	  border-bottom: 1px dotted black;
+	}
+	
+	.tooltip2 .tooltiptext {
+	  visibility: hidden;
+	  width: 300px;
+	  background-color: black;
+	  color: #fff;
+	  text-align: center;
+	  border-radius: 6px;
+	  padding: 5px 0;
+	
+	  /* Position the tooltip */
+	  position: absolute;
+	  z-index: 1;
+	  top: -5px;
+  left: 105%; 
+	}
+	
+	.tooltip2:hover .tooltiptext {
+	  visibility: visible;
+	}
+	</style>
 {% endblock %}
 
 {% block sidebar %}
@@ -20,18 +47,22 @@
 	{% endif %}
 	<ul>
 		{% for c in courses %}
-		<li>{{c.title}} 
-		{% if c.enroll == 1 %}<a href="{% url 'enroll' lid=lid cid=c.courseID %}">Enroll</a><br>
-		{% else %}You have already enrolled in this course!<br>
-		{% endif %}
+		<li class="tooltip2">{{c.title}} 
+		<span class="tooltiptext">
+				{% if c.enroll == 1 %}<a href="{% url 'enroll' lid=lid cid=c.courseID %}">Enroll</a><br>
+				{% else %}You have already enrolled in this course!<br>
+				{% endif %}
 		Taught by: {{c.taught_by}}<br>
-		{{c.description}}</li><br>
+		Description by: {{c.description}}</li><br></span>
 		{% endfor %}
     </ul>
 	</nav>
 	<footer>
-    <a href="{% url 'learner' id=lid %}">Back to homepage</a>
+	<a href="{% url 'learner' id=lid %}">Back to homepage</a>
+	<div></div>
+	
 	</footer>
+
 
 {% endblock %}
 
