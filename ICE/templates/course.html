@@ -1,69 +1,61 @@
-<DOCTYPE! html>
-  <html lang="en">
+{% extends 'layout.html' %}
 
-  <head>
-    <meta charset="utf-8">
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'learner.css' %}">
-    <title>{{title}}</title>
-  </head>
+{% block header %}
+<title>Courses</title>
+{% endblock %}
 
-  <body>
-    <div class="headcontainer">
-      <div class="header">
-        <h1>Welcome, {{name}}</h1>
-      </div>
-      <div class="cart">
-      </div>
+{% block sidebar %}
+<div id="module-list" >
+	<nav>
+    <ul>
+      {% for m in avamodules %}
+	  <li><a class="avamodule" href="#" ng-click="nav('{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}')">{{m.title}}</a></li>
+	  {% endfor %}
+	  {% for m in unavamodules %}
+	  <li><h5 class="unavamodule">{{m.title}}</h5></li>
+	  {% endfor %}
+	  </ul>
+  </nav>          
 
-      <div id="container">
-        <div class="grid sidebar">
+</div>
 
-          <div id="module-list">
-            <h3>Modules</h3>
-            <nav>
-              <ul>
-                {% for m in avamodules %}
-                <li><a href="{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}">{{m.title}}</a></li>
-                {% endfor %}
-                {% for m in unavamodules %}
-                <li>{{m.title}}</li>
-                {% endfor %}
+{% endblock %}
 
-              </ul>
-			  <a href="{% url 'learner' id=lid %}">Back to homepage</a>
-            </nav>
+{% block content %}
+  	<div>
+			{% with avamodules|last as last %}
+			<div ng-include="filePath || '{% url 'module' lid=lid mid=last.modID p=p cid=cid counter=last.counter %}'"></div>
+
+		{% endwith %}
+
+		</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(document).ready(function() {
+	
+
+});
+
+	(function(angular) {
+  'use strict';
+
+  app.controller('ICEAppController', ['$scope', function($scope) {
+		$scope.nav = function(path) {
+    $scope.filePath = path;
+};
+  }]);
+})(window.angular);
 
 
-          </div>
-        </div>
+</script>
+{% endblock %}
 
-        <div class="grid content">
-          <div id="course-list">
-          </div>
-          <div id="component-list">
-            <h3>Component</h3>
-            <nav>
-              <ul>
-                {% for m in components %}
-                {% if m.componentType == 1 %}
-                <li>{{m.content}}</li>
-                {% else %}
-                <li>{% load staticfiles %}
-                  <img src="{% static m.content %}" alt="Image"></li>
-                {% endif %}
-                {% endfor %}
-              </ul>
-              <div>
-                {% if check == 1 %}
-                <a href="{% url 'quiz' lid=lid qid=quiz p=p cid=cid %}">Take the quiz</a>
-                {% endif %}
-              </div>
-            </nav>
-            <button id="quizbutton">Attemp Quiz</button><br>
-            <p></p>
-            <button id="coursebutton">Back to Courses</button>
-          </div>
-  </body>
+<body>
 
-  </html>
+  <footer>
+    
+  </footer>
+</body>
+</html>
