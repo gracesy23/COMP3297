@@ -1,0 +1,13 @@
+body {
+  padding-top: 40px;
+
+
+}
+
+.navbar{
+  border-radius: 0;
+}
+
+.navbar-brand{
+  font-family: 'Satisfy', cursive;
+}

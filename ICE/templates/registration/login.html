@@ -1,32 +1,26 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap core CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'signup.css' %}" />
-
-  </head>
-
-  <body>
+{% extends 'LoginSignbase.html' %}
+{% block title %}instructor course details{% endblock %}
+{% block body %}
 
     <div class="container">
-      
-      <form class="form-signin" method="post">
-          <h2 class="form-signin-heading">Login</h2>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-      </form>
-
+      <div class="row justify-content-center">
+        <div class="col-6">
+					<div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Login</h4>
+            </div>
+						<div class="card-body">
+							{% load crispy_forms_tags %}
+						  <form method="post" class="form-group" novalidate>
+						    {% csrf_token %}
+						    {{ form|crispy }}
+                <input type="reset" class="btn btn-secondary" value="Reset">
+						    <button type="submit" class="btn btn-primary">Login</button>
+						  </form>
+						</div>
+					</div>
+        </div>
+      </div>
     </div>
 
-
-
-  </body>
-</html>
+{% endblock %}

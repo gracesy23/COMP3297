@@ -1,24 +1,24 @@
-<DOCTYPE! html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>{{title}}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}instructor course details{% endblock %}
+{% block body %}
   <header>
     <h1>Course homepage: {{title}}</h1>
   </header>
+
   <nav>
-    <ul>
-      {% for m in modules %}
-	  <li><a href="{% url 'moduleIns' mid=m.modID iid=iid cid=cid %}">{{m.title}}</a></li>
+    <ol id="sortable" class="list-group col-sm-3">
+    {% for m in modules %}
+	   <li class="list-group-item list-group-item-action"><a href="{% url 'moduleIns' mid=m.modID iid=iid cid=cid %}">{{m.title}}</a></li>
 	  {% endfor %}
-    </ul>
+  </ol>
   </nav>
-  <a href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
-  <br><a href="{% url 'instructorHome' iid=iid %}">Back to homepage</a>
+  <br>
+
+  <div class="btn-group" role="group" aria-label="JustButtongroup">
+    <a class="btn btn-primary" href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
+    <a class="btn btn-secondary" href="{% url 'instructorHome' iid=iid %}">Back to homepage</a>
+  </div>
   <footer>
-    
+
   </footer>
-</body>
-</html>
+{% endblock %}

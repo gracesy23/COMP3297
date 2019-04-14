@@ -1,25 +1,28 @@
-<DOCTYPE! html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>{{name}}'s homepage</title>
-</head>
-<body>
-  <header>
-    <h1>Welcome, {{name}}</h1>
-  </header>
+{% extends 'base.html' %}
+{% block title %}instructor Hompage{% endblock %}
+{% block body %}
+  <h2 class="mt-2">Welcome to ICE, {{name}}</h2>
+  <hr class="mt-0 mb-4">
   <nav>
-	Course(s) created by you:
-    <ul>
+  	<h3>Course(s) created by you:</h3>
+
+    <ol id="sortable">
       {% for c in courses %}
-	  <li><a href="{% url 'instructor' iid=iid cid=c.courseID %}">{{c.title}}</a></li>
+    <li><a href="{% url 'instructor' iid=iid cid=c.courseID %}">{{c.title}}</a></li>
       {% endfor %}
-    </ul>
-	<a href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
-	<br><a href="{% url 'logout' %}">Log out</a>
+    </ol>
+
+
+
+    <div class="btn-group" role="group" aria-label="JustButtongroup">
+      <a class="btn btn-primary" href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
+      <a class="btn btn-secondary" href="{% url 'logout' %}">Log out</a>
+    </div>
   </nav>
   <footer>
-    
+
   </footer>
-</body>
+
+{% endblock %}
+
 </html>
