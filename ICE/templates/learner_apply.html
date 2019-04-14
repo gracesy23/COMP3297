@@ -1,0 +1,23 @@
+<DOCTYPE! html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Learner account application</title>
+</head>
+<body>
+	<header>
+    <h1>Learner account application</h1>
+	</header>
+	<nav>
+    <form  method='POST' action='{% url "learner_signup" %}'>
+	{% csrf_token %}
+	Please provide your StaffID
+	<input type="text" name="staffID">
+	<input type="submit" name="b" value="Add">
+	</form>
+	</nav>
+	<footer>
+    
+	</footer>
+</body>
+</html>

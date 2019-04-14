@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Create a new course{% endblock %}
+{% block body %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <div class="card">
+         <div class="card-body">
+          <h2 class="row justify-content-center">Create A New Course</h1>
+          <nav>
+           <form method='POST' action='{% url "create_new_course" iid=iid %}'>
+             {% csrf_token %}
+             <div class="form-group">
+               <lable for="inputCourseTitle" class="col-sm-1">Title:</lable>
+               <div class="col-sm-12">
+                 <input type="text" name="course_title" value="" id="inputCourseTitle" class="form-control" placeholder="Please Enter Course Title" required>
+               </div>
+             </div>
+             <div class="form-group">
+               <lable for="inputCourseDescription" class="col-sm-1">Description:</lable>
+               <div class="col-sm-12">
+                 <textarea name="course_description" id="inputCourseDescription" class="form-control" rows="5" placeholder="Please Enter Course Description"></textarea>
+               </div>
+            </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <input type="submit" name="b" value="Create" class="btn btn-primary">
+                </div>
+              </div>
+           </form>
+         </nav>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+	<footer>
+	</footer>
+{% endblock %}

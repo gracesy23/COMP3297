@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+  <header>
+    <h1>Quiz Result</h1>
+  </header>
+  <nav>
+   <div> 
+    You scored {{result}}.
+	{% if passed %}
+	Congratulations!<br>
+	You have passed this quiz.<br>
+	You are now granted access to the next module.<br>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Great!</a>
+	{% else %}
+	You failed this quiz!<br>
+	Please review the materials and try again.<br>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Back to the course page</a>
+	 {% endif %}
+    </div>
+  </nav>
+  <footer>
+    
+  </footer>
+
+{% endblock %}
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Quiz Result</title>
+</head>
+<body>
+  <header>
+    <h1>Quiz Result</h1>
+  </header>
+  <nav>
+   <div> 
+    You scored {{result}}.
+	{% if passed %}
+	Congratulations!<br>
+	You have passed this quiz.<br>
+	You are now granted access to the next module.<br>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Great!</a>
+	{% else %}
+	You failed this quiz!<br>
+	Please review the materials and try again.<br>
+	<a href="{% url 'course' lid=lid cid=cid p=p %}">Back to the course page</a>
+	 {% endif %}
+    </div>
+  </nav>
+  <footer>
+    
+  </footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h5>Quiz</h5>
+<nav>
+  <div>
+   <form  method='POST' action='{% url "quizcheck" qid=qid lid=lid cid=cid p=p %}'>
+   {% csrf_token %}
+   <ul>
+   {% for q in questions %}
+   <li>{{q.question}}</li>
+   <li>A.{{q.choiceA}}    B.{{q.choiceB}}    C.{{q.choiceC}}    D.{{q.choiceD}}</li>
+ Your answer: <select name="ansTo{{q.questionID}}">
+ <option value="choiceA">A</option>
+ <option value="choiceB">B</option>
+ <option value="choiceC">C</option>
+ <option value="choiceD">D</option>
+ <option value="" selected="selected">-</option>
+ </select>
+ {% endfor %}
+ </ul>
+ <input type="submit" name="b" value="Submit">
+ </form>
+
+   </div>
+ </nav>
+{% endblock %}
+
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Quiz</title>
+</head>
+<body>
+  <header>
+    <h1>Quiz</h1>
+  </header>
+  
+  <footer>
+
+  </footer>
+</body>
+</html>

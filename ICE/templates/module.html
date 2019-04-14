@@ -1,0 +1,24 @@
+<header>
+  <h1>Module: {{title}}</h1>
+</header>
+
+<nav>
+  <ul>
+    {% for m in components %}
+    {% if m.componentType == 1 %}
+    <li>{{m.content}}</li>
+    {% else %}
+    <li>{% load staticfiles %}
+      <img src="{% static m.content %}" alt="Image"></li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+  <div>
+    {% if check == 1 %}
+    <a href="{% url 'quiz' lid=lid qid=quiz p=p cid=cid %}">Take the quiz</a>
+    {% endif %}
+  </div>
+</nav>
+
+
+

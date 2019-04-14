@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<title>Coureses</title>
+<style>
+	.tooltip2 {
+	  position: relative;
+	  display: inline-block;
+	  border-bottom: 1px dotted black;
+	}
+	
+	.tooltip2 .tooltiptext {
+	  visibility: hidden;
+	  width: 300px;
+	  background-color: black;
+	  color: #fff;
+	  text-align: center;
+	  border-radius: 6px;
+	  padding: 5px 0;
+	
+	  /* Position the tooltip */
+	  position: absolute;
+	  z-index: 1;
+	  top: -5px;
+  left: 105%; 
+	}
+	
+	.tooltip2:hover .tooltiptext {
+	  visibility: visible;
+	}
+	</style>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>All courses</h1>
+	</header>
+	<nav>
+    {% if alert == 1 %}
+	<div class="alert">
+	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+	You have successfully enrolled in the course!
+	</div>
+	{% endif %}
+	<ul>
+		{% for c in courses %}
+		<li class="tooltip2">{{c.title}} 
+		<span class="tooltiptext">
+				{% if c.enroll == 1 %}<a href="{% url 'enroll' lid=lid cid=c.courseID %}">Enroll</a><br>
+				{% else %}You have already enrolled in this course!<br>
+				{% endif %}
+		Taught by: {{c.taught_by}}<br>
+		Description by: {{c.description}}</li><br></span>
+		{% endfor %}
+    </ul>
+	</nav>
+	<footer>
+	<a href="{% url 'learner' id=lid %}">Back to homepage</a>
+	<div></div>
+	
+	</footer>
+
+
+{% endblock %}
+
+
+<DOCTYPE! html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>All courses</title>
+</head>
+<body>
+	<header>
+    <h1>All courses</h1>
+	</header>
+	<nav>
+    {% if alert == 1 %}
+	<div class="alert">
+	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+	You have successfully enrolled in the course!
+	</div>
+	{% endif %}
+	<ul>
+		{% for c in courses %}
+		<li>{{c.title}} 
+		{% if c.enroll == 1 %}<a href="{% url 'enroll' lid=lid cid=c.courseID %}">Enroll</a><br>
+		{% else %}You have already enrolled in this course!<br>
+		{% endif %}
+		Taught by: {{c.taught_by}}<br>
+		{{c.description}}</li><br>
+		{% endfor %}
+    </ul>
+	</nav>
+	<footer>
+    <a href="{% url 'learner' id=lid %}">Back to homepage</a>
+	</footer>
+</body>
+</html>

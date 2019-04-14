@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<title>ICE</title>
+{% endblock %}
+
+{% block content %}
+  <nav>
+    <ul>
+      {% for Course in courses %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
+	  {% endfor %}
+	  {% for Course in passed %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
+	  {% endfor %}
+	</ul>
+  </nav>
+  <div>
+    <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
+    </div>
+{% endblock %}
+<DOCTYPE! html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>Learner's homepage</title>
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{name}}</h1>
+  </header>
+  <div class = 'container'>
+  <h2>These are the courses you are currently taking</h2>
+  <h3><a href="{% url 'logout' %}">Log out</a></h3>
+  <nav>
+    <ul>
+      {% for Course in courses %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
+	  {% endfor %}
+	  {% for Course in passed %}
+	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
+	  {% endfor %}
+	</ul>
+  </nav>
+  </div>
+  <div>
+  <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
+  </div>
+  <footer>
+    ICE -one tool to learn it all
+  </footer>
+</body>
+</html>

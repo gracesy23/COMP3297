@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}instructor Hompage{% endblock %}
+{% block body %}
+  <h2 class="mt-2">Welcome to ICE, {{name}}</h2>
+  <hr class="mt-0 mb-4">
+  <nav>
+  	<h3>Course(s) created by you:</h3>
+
+    <ol id="sortable">
+      {% for c in courses %}
+    <li><a href="{% url 'instructor' iid=iid cid=c.courseID %}">{{c.title}}</a></li>
+      {% endfor %}
+    </ol>
+
+
+
+    <div class="btn-group" role="group" aria-label="JustButtongroup">
+      <a class="btn btn-primary" href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
+      <a class="btn btn-secondary" href="{% url 'logout' %}">Log out</a>
+    </div>
+  </nav>
+  <footer>
+
+  </footer>
+
+{% endblock %}
+
+</html>

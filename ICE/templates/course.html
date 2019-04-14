@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<title>Courses</title>
+{% endblock %}
+
+{% block sidebar %}
+<div id="module-list" >
+	<nav>
+    <ul>
+      {% for m in avamodules %}
+	  <li><a class="avamodule" href="#" ng-click="nav('{% url 'module' lid=lid mid=m.modID p=p cid=cid counter=m.counter %}')">{{m.title}}</a></li>
+	  {% endfor %}
+	  {% for m in unavamodules %}
+	  <li><h5 class="unavamodule">{{m.title}}</h5></li>
+	  {% endfor %}
+	  </ul>
+  </nav>          
+
+</div>
+
+{% endblock %}
+
+{% block content %}
+  	<div>
+			{% with avamodules|last as last %}
+			<div ng-include="filePath || '{% url 'module' lid=lid mid=last.modID p=p cid=cid counter=last.counter %}'"></div>
+
+		{% endwith %}
+
+		</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(document).ready(function() {
+	
+
+});
+
+	(function(angular) {
+  'use strict';
+
+  app.controller('ICEAppController', ['$scope', function($scope) {
+		$scope.nav = function(path) {
+    $scope.filePath = path;
+};
+  }]);
+})(window.angular);
+
+
+</script>
+{% endblock %}
+
+<body>
+
+  <footer>
+    
+  </footer>
+</body>
+</html>

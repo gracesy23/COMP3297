@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Module: {{title}}{% endblock %}
+{% block body %}
+  <header>
+    <h1>Module: {{title}}</h1>
+  </header>
+  <nav>
+    <ul>
+      {% for m in components %}
+	     {% if m.componentType == 1 %}
+	      <li>{{m.content}}</li>
+	     {% else %}
+	      <li>{% load staticfiles %}
+		    <img src="{% static m.content %}" alt="Image" class="img-responsive"></li>
+	     {% endif %}
+	    {% endfor %}
+    </ul>
+
+
+    <div>
+  	 Quiz: {{ quiz }}
+    </div>
+
+
+    {% load crispy_forms_tags %}
+    <form  method='POST' action='{% url "changemodname" mid=mid iid=iid cid=cid %}' class="form-group col-12">
+       {% csrf_token %}
+       {{form1|crispy}}
+      <input type="submit" name="a" value="Change" class="btn btn-primary">
+    </form>
+
+
+
+  <div>
+    <form  method='POST' action='{% url "addComp" mid=mid iid=iid cid=cid %}'  class="form-group col-12">
+      {% csrf_token %}
+      <lable>Add a component:</lable>
+      <select name="compID" class="custom-select" style="margin-bottom: 1rem;">
+      {% for component in choice %}
+    	<option value="{{component.compID}}">{{component.content}}</option>
+    	{% endfor %}
+    	</select>
+      <input type="submit" name="b" value="Add" class="btn btn-primary">
+    </form>
+  </div>
+
+
+  <div>
+  <form  method='POST' action='{% url "addQuiz" mid=mid iid=iid cid=cid %}'  class="form-group col-12">
+     {% csrf_token %}
+   <lable>Add a quiz: </lable>
+   <select name="quizID" class="custom-select" style="margin-bottom: 1rem;">
+   {% for q in quizlist %}
+	<option value="{{q.quizID}}">Quiz:{{q.quizID}}, containing {{q.numOfQuestion}} questions</option>
+	{% endfor %}
+	</select>
+  <input type="submit" name="b" value="Add" class="btn btn-primary">
+  </form>
+  </div>
+
+
+
+
+
+  </nav>
+  <a href="{% url 'instructor' cid=cid iid=iid %}">Back to Course Page</a>
+  <footer>
+
+  </footer>
+{% endblock %}
