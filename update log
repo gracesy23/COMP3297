@@ -1,3 +1,13 @@
+patch 04/16:
+update:
+-Instructor registration: First_name, Last_name and self_intro are collected now.
+-Instructor create new course: newly created course can be put into a category.
+-Instructor modify module: Each component can only be added to one module.
+-Learner view_all_course: Now Learner can view courses by category and their CECU values.
+-Token can only be used once now.
+-More components are added in the database for testing.
+-A more challenging quiz has replaced the old one in case you guys get bored doing the old one.
+
 patch 04/13:
 -Instructor can no longer create courses with empty title.
 -Fixed the bug that learner's name sometimes changes after enrolling in a course.
