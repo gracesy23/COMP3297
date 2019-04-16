@@ -39,6 +39,13 @@
     <h1>All courses</h1>
 	</header>
 	<nav>
+	View by category: <br>
+	<a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all courses</a>
+	 || 
+	{% for a in cate %}
+	<a href="{% url 'allcourses' lid=lid cate=a.cateID alert=0 %}">{{a.title}}</a>
+	 || 
+	{% endfor %}
     {% if alert == 1 %}
 	<div class="alert">
 	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
@@ -78,6 +85,13 @@
     <h1>All courses</h1>
 	</header>
 	<nav>
+	View by category: <br>
+	<a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all courses</a>
+	 || 
+	{% for a in cate %}
+	<a href="{% url 'allcourses' lid=lid cate=a.cateID alert=0 %}">{{a.title}}</a>
+	 || 
+	{% endfor %}
     {% if alert == 1 %}
 	<div class="alert">
 	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
@@ -91,6 +105,7 @@
 		{% else %}You have already enrolled in this course!<br>
 		{% endif %}
 		Taught by: {{c.taught_by}}<br>
+		CECU value:{{c.CECU}}<br>
 		{{c.description}}</li><br>
 		{% endfor %}
     </ul>

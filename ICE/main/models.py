@@ -1,10 +1,15 @@
 from django.db import models
 
 # Create your models here.
+class InstructorInfo(models.Model):
+	instructorID = models.IntegerField()
+	first_name = models.CharField(max_length = 200)
+	last_name = models.CharField(max_length = 200)
+	intro = models.TextField(max_length = 200)
+
 class Category(models.Model):
 	cateID = models.IntegerField()
 	title = models.CharField(max_length = 200)
-	contain_course = models.IntegerField()
 
 class Staff(models.Model):
 	staffID = models.IntegerField()
@@ -24,6 +29,7 @@ class UserLogin(models.Model):
 	
 class Course(models.Model):
 	courseID = models.IntegerField()
+	CECU = models.IntegerField(default = 6)
 	title = models.CharField(max_length = 200)
 	created_by = models.IntegerField()
 	contains_modules = models.IntegerField()
@@ -47,6 +53,7 @@ class Component(models.Model):
 	compID = models.IntegerField()
 	content = models.TextField(max_length = 200)
 	componentType = models.IntegerField(default='1')
+	used = models.IntegerField(default='0')
 	
 class Quiz(models.Model):
 	quizID = models.IntegerField()
@@ -87,3 +94,4 @@ class CourseT(models.Model):
 	description = models.TextField(max_length = 200)
 	taught_by = models.CharField(max_length = 200)
 	enroll = models.IntegerField()
+	CECU = models.IntegerField(default=6)

@@ -36,6 +36,20 @@ def newaccount(request):
 	else:
 		return render(request,'token.html')
 
+def instructor_reg_sup(request,iid):
+	form = request.POST
+	instructor = InstructorInfo()
+	instructor.instructorID = iid
+	instructor.first_name = form.get('FirstName')
+	instructor.last_name = form.get('LastName')
+	fullname = instructor.first_name + ' ' + instructor.last_name
+	instructor.intro = form.get('self_intro')
+	instructor.save()
+	instructor = Instructor.objects.get(instructorID = iid)
+	instructor.name = fullname
+	instructor.save()
+	return render(request,'regsucc.html')
+
 #role: 1 for learner 2 for ins 3 for admin
 #django sign_up
 class SignUp(generic.CreateView):
@@ -65,6 +79,7 @@ def newaccount_sup(request,username,token):
 			temp.takecourse = 0
 			temp.progress = 0
 			temp.save()
+			token.delete()
 			return render(request,'regsucc.html')
 		else:
 			if Instructor.objects.all().count()!=0:
@@ -82,7 +97,11 @@ def newaccount_sup(request,username,token):
 			temp.name = username
 			temp.create_course = 0
 			temp.save()
-			return render(request,'regsucc.html')
+			token.delete()
+			context = {
+				'iid':iid
+			}
+			return render(request,'Instructor_reg_sup.html',context)
 	
 def learner_signup(request):
 	if(request.method == "POST"):
@@ -489,6 +508,9 @@ def moduleIns(request, mid,iid,cid):
 			for c in component:
 				components.append(c)
 		allComp = Component.objects.all()
+		for a in allComp:
+			if a.used == 0:
+				choice.append(a)
 					
 		#add a quiz part
 		allQuiz = Quiz.objects.all()
@@ -515,7 +537,7 @@ def moduleIns(request, mid,iid,cid):
 			'form2':form2,
 			'iid':iid,
 			'cid':cid,
-			'choice':allComp,
+			'choice':choice,
 			'quizlist':quizlist
 		}
 		
@@ -555,8 +577,12 @@ def addComp(request,mid,iid,cid):
 			newmod.moduleID = m.moduleID
 			newmod.moduleTitle = m.moduleTitle
 			newmod.containsQuiz = m.containsQuiz
-		newmod.containsComp = form.get('compID')
+		temp = form.get('compID')
+		newmod.containsComp = temp
 		newmod.save()
+		comp = Component.objects.get(compID = temp)
+		comp.used = 1
+		comp.save()
 		
 		return moduleIns(request, mid,iid,cid)
 	else:
@@ -667,6 +693,8 @@ def create_new_course(request,iid):
 				course.courseID = cid
 				course.created_by = iid
 				course.title = form.get('course_title')
+				course.description = form.get('course_description')
+				course.category = form.get('cateID')
 				course.contains_modules = 0
 				course.save()
 				instructor = Instructor()
@@ -677,8 +705,13 @@ def create_new_course(request,iid):
 				instructor.save()
 				return instructorHome(request,iid)
 		else:
+			cate_list = Category.objects.all()
+			cate = []
+			for a in cate_list:
+				cate.append(a)
 			context = {
-				'iid':iid
+				'iid':iid,
+				'cate':cate
 			}
 			return render(request, 'new_course.html',context)
 	else:
@@ -696,6 +729,7 @@ def view_all_courses(request,lid,cate,alert):
 			enrolled_courses.append(a.takecourse)
 		
 		courses = []
+		
 		if cate == '0':
 			course = Course.objects.all().order_by('courseID')
 			cid = 0
@@ -707,19 +741,40 @@ def view_all_courses(request,lid,cate,alert):
 					temp.title = c.title
 					temp.description = c.description
 					temp.enroll = 1
+					temp.CECU = c.CECU
 					for a in enrolled_courses:
 						if cid == a:
 							temp.enroll = 0
 					instructor = Instructor.objects.get(create_course = cid)
 					temp.taught_by = instructor.name
 					courses.append(temp)
-		
-			
-		
+		else:
+			course = Course.objects.all().filter(category = cate).order_by('courseID')
+			cid = 0
+			for c in course:
+				if c.courseID != cid:
+					cid = c.courseID
+					temp = CourseT()
+					temp.courseID = cid
+					temp.title = c.title
+					temp.description = c.description
+					temp.enroll = 1
+					temp.CECU = c.CECU
+					for a in enrolled_courses:
+						if cid == a:
+							temp.enroll = 0
+					instructor = Instructor.objects.get(create_course = cid)
+					temp.taught_by = instructor.name
+					courses.append(temp)
+		cate_list = Category.objects.all()
+		cate = []
+		for a in cate_list:
+			cate.append(a)	
 		context = {
 			'courses':courses,
 			'lid':lid,
-			'alert':alert
+			'alert':alert,
+			'cate':cate
 		}
 		
 		return render(request, 'view_all_courses.html',context)
