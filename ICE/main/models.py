@@ -62,6 +62,7 @@ class Component(models.Model):
 	content = models.TextField(max_length = 200)
 	componentType = models.IntegerField(default='1')
 	used = models.IntegerField(default='0')
+	courseID = models.IntegerField(default='0')
 	
 class ComponentT(models.Model):
 	title = models.CharField(max_length = 200,default = 'entry')
@@ -74,6 +75,10 @@ class ComponentT(models.Model):
 class Quiz(models.Model):
 	quizID = models.IntegerField()
 	questionID = models.IntegerField()
+	courseID = models.IntegerField(default=0)
+	standard = models.IntegerField(default=60)
+	numOfQuestion = models.IntegerField(default=0)
+	draw = models.IntegerField(default=0)
 
 class QuizT(models.Model):
 	quizID = models.IntegerField()

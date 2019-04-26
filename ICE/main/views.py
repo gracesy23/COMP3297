@@ -453,11 +453,29 @@ def quiz(request, lid,qid, cid, p):
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
+		info = Quiz.objects.filter(quizID = qid).first()
+		total = info.numOfQuestion
+		draw = info.draw
+		get = []
+		exist = 0
+		while draw > 0:
+			exist = 0
+			q = random.randint(1,total)
+			for a in get:
+				if a == q:
+					exist = 1
+			if exist == 0:
+				get.append(q)
+				draw = draw - 1
 		quiz = Quiz.objects.filter(quizID = qid)
 		questions = []
+		counter = 0
 		for a in quiz:
-			question = Question.objects.get(questionID = a.questionID)
-			questions.append(question)
+			counter = counter + 1
+			for b in get:
+				if b == counter:
+					question = Question.objects.get(questionID = a.questionID)
+					questions.append(question)
 
 		context = {
 			'questions':questions,
@@ -649,13 +667,13 @@ def moduleIns(request, mid,iid,cid):
 				temp.used = component.used
 				temp.place = i
 				components.append(temp)
-		allComp = Component.objects.all()
+		allComp = Component.objects.filter(courseID = cid)
 		for a in allComp:
 			if a.used == 0:
 				choice.append(a)
 
 		#add a quiz part
-		allQuiz = Quiz.objects.all()
+		allQuiz = Quiz.objects.filter(courseID = cid)
 		temp = QuizT(quizID = 0,numOfQuestion = 0)
 		counter = 0
 		quizlist = []
@@ -761,23 +779,27 @@ def quizCheck(request,qid,p,lid,cid):
 		total = 0
 		correct = 0
 		passed = 0
+		standard = 0
 		for a in quiz:
+			standard = a.standard
+			total = a.draw
 			question = Question.objects.get(questionID = a.questionID)
 			ans = "ansTo"
 			ans = ans + str(question.questionID)
-			total = total + 1
-			if question.answer == form.get(ans):
-				correct = correct + 1
+			if form.get(ans) != '':
+				if question.answer == form.get(ans):
+					correct = correct + 1
 		result = correct/total
 		result = round(result,2)
-		if result >= 0.6:
+		result = result * 100
+		if result >= standard:
 			passed = 1
 			p = int(p)
 			p = p + 1
 			learner = Progress.objects.get(takecourse = cid, learnerID = lid)
 			learner.progress = p
 			learner.save()
-		result = result * 100
+		
 		context = {
 			'passed':passed,
 			'result':result,
@@ -802,13 +824,12 @@ def instructorHome(request, iid):
 			name = a.name
 			if a.create_course != 0:
 				temp = Temp()
-				course = Course.objects.filter(courseID = a.create_course)
-				for c in course:
-					temp.courseID = c.courseID
-					temp.title = c.title
-					temp.category = c.category
-					temp.description = c.description
-					temp.progress = c.created_by
+				course = Course.objects.filter(courseID = a.create_course).first()
+				temp.courseID = course.courseID
+				temp.title = course.title
+				temp.category = course.category
+				temp.description = course.description
+				temp.progress = course.created_by
 				courses.append(temp)
 		context = {
 			'iid': iid,
@@ -842,6 +863,7 @@ def create_new_course(request,iid):
 				course.title = form.get('course_title')
 				course.description = form.get('course_description')
 				course.category = form.get('cateID')
+				course.CECU = form.get('CECU')
 				course.contains_modules = 0
 				course.save()
 				instructor = Instructor()
