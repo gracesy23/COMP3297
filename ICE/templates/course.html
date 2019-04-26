@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block sidebar %}
-<div id="module-list" >
+<div id="module-list" value={{p}}>
 	<nav>
     <ul>
       {% for m in avamodules %}
@@ -33,9 +33,15 @@
 
 {% block script %}
 <script>
-	$(document).ready(function() {
-	
 
+var passes = $("#module-list")[0].attributes.value.value;
+console.log(passes);
+var i = 0;
+$('.avamodule').each(function(i, obj) {
+		if (i < passes){
+			this.append(" (Passed)");
+		}
+		i++;
 });
 
 	(function(angular) {
