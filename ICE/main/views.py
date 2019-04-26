@@ -63,8 +63,8 @@ def newaccount_sup(request,username,token):
 		token = Token.objects.get(token = id)
 		if token.role == 1:
 			staff = Staff.objects.get(staffID = token.staffID)
-			if Learner.objects.all().count()!=0:
-				learner = Learner.objects.all().order_by('learnerID').last()
+			if Progress.objects.all().count()!=0:
+				learner = Progress.objects.all().order_by('learnerID').last()
 				lid = learner.learnerID + 1
 			else:
 				lid = 1
@@ -73,11 +73,17 @@ def newaccount_sup(request,username,token):
 			temp.role = 1
 			temp.userID = lid
 			temp.save()
-			temp = Learner()
+			temp = Progress()
 			temp.learnerID = lid
-			temp.learnerName = staff.first_name
 			temp.takecourse = 0
 			temp.progress = 0
+			temp.learnerName = staff.first_name
+			temp.save()
+			temp = Learner()
+			temp.email = staff.email
+			temp.first_name = staff.first_name
+			temp.last_name = staff.last_name
+			temp.learnerID = lid
 			temp.save()
 			token.delete()
 			return render(request,'regsucc.html')
@@ -193,7 +199,7 @@ def learner(request, id):
 	temp = UserLogin.objects.get(username = name)
 	id = int(id)
 	if temp.role == 1 and temp.userID == id:
-		learner = Learner.objects.filter(learnerID = id)
+		learner = Progress.objects.filter(learnerID = id)
 		courses = []
 		passed = []
 		for a in learner:
@@ -220,11 +226,6 @@ def learner(request, id):
 		return render(request, 'learner.html', context)
 	else:
 		return render(request, 'badlogin.html')
-
-@login_required	
-def instructor(request):
-	
-	return render(request, 'instructor.html')
 	
 @login_required
 def course(request,p,cid,lid):
@@ -232,7 +233,7 @@ def course(request,p,cid,lid):
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
-		learner = Learner.objects.get(takecourse = cid, learnerID = lid)
+		learner = Progress.objects.get(takecourse = cid, learnerID = lid)
 		course = Course.objects.filter(courseID = cid)
 		avamodules = []
 		unavamodules = []
@@ -268,6 +269,20 @@ def course(request,p,cid,lid):
 			learner.progress = 100
 			learner.pass_date = datetime.datetime.now()
 			learner.save()
+			learnername = learner.learnerName
+			learner = Learner.objects.get(learnerID = lid)
+			address = learner.email
+			msg = 'You have completed the course '
+			msg = msg + title
+			msg = msg + '\n' + 'CECU units have been awarded accordingly.\n'
+			msg = msg + 'Congratulations!\n'
+			send_mail(
+			'ICE course complete',
+			msg,
+			'ICE@gmail.com',
+			[address],
+			fail_silently=False,
+			)
 		context = {
 			'title': title,
 			'avamodules': avamodules,
@@ -276,8 +291,7 @@ def course(request,p,cid,lid):
 			'cid':cid,
 			'p':p,
 			'lid':lid,
-			'check':check,
-			'name':learner.learnerName
+			'check':check
 		}
 		
 		return render(request, 'course.html', context)
@@ -345,13 +359,35 @@ def loadComp(request):
 	
 	return JsonResponse(result)
 
+def viewlist(request,lid):
+	list = []
+	CCECU = 0
+	temp = Progress.objects.filter(learnerID = lid).order_by('pass_date')
+	for a in temp:
+		if str(a.pass_date) != "2000-01-01":
+			course = History()
+			dummy = Course.objects.filter(courseID = a.takecourse).first()
+			course.title = dummy.title
+			course.date = a.pass_date
+			course.CECU = dummy.CECU
+			course.CCECU = CCECU + course.CECU
+			list.append(course)
+			CCECU = course.CCECU
+	
+	context = {
+		'list':list,
+		'lid':lid
+	}
+	
+	return render(request,'history.html',context)
+	
 @login_required
 def courseModule(request,p,cid,lid,mid,counter):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
-		learner = Learner.objects.get(takecourse = cid, learnerID = lid)
+		learner = Progress.objects.get(takecourse = cid, learnerID = lid)
 		course = Course.objects.filter(courseID = cid)
 		avamodules = []
 		unavamodules = []
@@ -447,20 +483,24 @@ def instructor(request, iid, cid):
 		for a in course:
 			title = a.title
 			if a.contains_modules != 0:
+				i = i+1
 				mod = ModuleT()
 				mod.modID = a.contains_modules
 				module = Module.objects.filter(moduleID = a.contains_modules)
 				for b in module:
 					mod.title =  b.moduleTitle
-				i = i+1
+				mod.place = i
 				modules.append(mod)
-			
+		empty = 1
+		if i > 1:
+			empty = 0
 				
 		context = {
 			'title': title,
 			'modules': modules,
 			'cid':cid,
-			'iid':iid
+			'iid':iid,
+			'empty': empty
 		}
 		
 		return render(request, 'courseIns.html', context)	
@@ -490,6 +530,99 @@ def createModule(request,iid,cid):
 		return render(request,'badlogin.html')
 
 @login_required	
+def change_mod_order(request,iid,cid):
+	form = request.POST
+	origin = int(form.get('origin'))
+	destination = int(form.get('destination'))
+	i = 0
+	if origin == destination or origin == destination+1:
+		return instructor(request,iid,cid)
+	elif origin < destination:
+		courses = Course.objects.filter(courseID = cid)
+		for a in courses:
+			if a.contains_modules != 0:
+				i = i + 1
+				if i == origin:
+					temp = a.contains_modules
+				if i > origin:
+					dummy.contains_modules = a.contains_modules
+					dummy.save()
+				if i == destination:
+					a.contains_modules = temp
+					a.save()
+					break
+				dummy = a
+		return instructor(request,iid,cid)
+	else:
+		temp = 0
+		alpha = 0
+		courses = Course.objects.filter(courseID = cid)
+		for a in courses:
+			if a.contains_modules != 0:
+				i = i + 1
+				if i == destination + 1:
+					alpha = a.contains_modules
+					dummy = a
+				if i > destination + 1 and i != origin:
+					alpha = a.contains_modules
+					a.contains_modules = temp
+					a.save()
+				if i == origin:
+					dummy.contains_modules = a.contains_modules
+					dummy.save()
+					a.contains_modules = temp
+					a.save()
+					break
+				temp = alpha
+		return instructor(request,iid,cid)
+		
+def change_comp_order(request, mid,iid,cid):
+	form = request.POST
+	origin = int(form.get('origin'))
+	destination = int(form.get('destination'))
+	i = 0
+	if origin == destination or origin == destination+1:
+		return moduleIns(request, mid,iid,cid)
+	elif origin < destination:
+		modules = Module.objects.filter(moduleID = mid)
+		for a in modules:
+			if a.containsComp != 0:
+				i = i + 1
+				if i == origin:
+					temp = a.containsComp
+				if i > origin:
+					dummy.containsComp = a.containsComp
+					dummy.save()
+				if i == destination:
+					a.containsComp = temp
+					a.save()
+					break
+				dummy = a
+		return moduleIns(request, mid,iid,cid)
+	else:
+		temp = 0
+		alpha = 0
+		modules = Modules.objects.filter(moduleID = mid)
+		for a in modules:
+			if a.containsComp != 0:
+				i = i + 1
+				if i == destination + 1:
+					alpha = a.containsComp
+					dummy = a
+				if i > destination + 1 and i != origin:
+					alpha = a.containsComp
+					a.containsComp = temp
+					a.save()
+				if i == origin:
+					dummy.containsComp = a.containsComp
+					dummy.save()
+					a.containsComp = temp
+					a.save()
+					break
+				temp = alpha
+		return moduleIns(request, mid,iid,cid)
+		
+@login_required	
 def moduleIns(request, mid,iid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -501,12 +634,21 @@ def moduleIns(request, mid,iid,cid):
 		temp = []
 		form1 = ChangeForm()
 		form2 = AddForm()
+		i = 0
 		for a in module:
 			title = a.moduleTitle
 			quiz = a.containsQuiz
-			component = Component.objects.filter(compID = a.containsComp)
-			for c in component:
-				components.append(c)
+			if a.containsComp != 0:
+				i = i + 1
+				component = Component.objects.get(compID = a.containsComp)
+				temp = ComponentT()
+				temp.title = component.title
+				temp.compID = component.compID
+				temp.content = component.content
+				temp.componentType = component.componentType
+				temp.used = component.used
+				temp.place = i
+				components.append(temp)
 		allComp = Component.objects.all()
 		for a in allComp:
 			if a.used == 0:
@@ -526,7 +668,9 @@ def moduleIns(request, mid,iid,cid):
 				temp.quizID = a.quizID
 			temp.numOfQuestion = temp.numOfQuestion + 1
 		quizlist.append(temp)
-			
+		empty = 1
+		if i > 1:
+			empty = 0
 		
 		context = {
 			'components':components,
@@ -538,7 +682,8 @@ def moduleIns(request, mid,iid,cid):
 			'iid':iid,
 			'cid':cid,
 			'choice':choice,
-			'quizlist':quizlist
+			'quizlist':quizlist,
+			'empty':empty
 		}
 		
 		return render(request, 'moduleIns.html', context)
@@ -629,7 +774,7 @@ def quizCheck(request,qid,p,lid,cid):
 			passed = 1
 			p = int(p)
 			p = p + 1
-			learner = Learner.objects.get(takecourse = cid, learnerID = lid)
+			learner = Progress.objects.get(takecourse = cid, learnerID = lid)
 			learner.progress = p
 			learner.save()
 		result = result * 100	
@@ -654,9 +799,9 @@ def instructorHome(request, iid):
 		instructor = Instructor.objects.filter(instructorID = iid)
 		courses = []
 		for a in instructor:
+			name = a.name
 			if a.create_course != 0:
 				temp = Temp()
-				name = a.name
 				course = Course.objects.filter(courseID = a.create_course)
 				for c in course:
 					temp.courseID = c.courseID
@@ -723,7 +868,7 @@ def view_all_courses(request,lid,cate,alert):
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
-		learner = Learner.objects.filter(learnerID = lid)
+		learner = Progress.objects.filter(learnerID = lid)
 		enrolled_courses = []
 		for a in learner:
 			enrolled_courses.append(a.takecourse)
@@ -787,8 +932,8 @@ def enroll(request,lid,cid):
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
 	if temp.role == 1 and temp.userID == lid:
-		learner = Learner.objects.filter(learnerID = lid).first()
-		new_learner = Learner()
+		learner = Progress.objects.filter(learnerID = lid).first()
+		new_learner = Progress()
 		new_learner.learnerID = lid
 		new_learner.learnerName = learner.learnerName
 		new_learner.takecourse = cid

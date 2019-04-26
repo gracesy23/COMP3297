@@ -39,10 +39,29 @@
       {% for component in choice %}
     	<option value="{{component.compID}}">{{component.content}}</option>
     	{% endfor %}
-    	</select>
       <input type="submit" name="b" value="Add" class="btn btn-primary">
     </form>
   </div>
+  
+  {% if empty == 0 %}
+  <div>
+	<form  method='POST' action='{% url "change_comp_order" mid=mid iid=iid cid=cid %}'>
+    {% csrf_token %}
+    Reposition component <select name="origin">
+	{% for a in components %}
+	<option value="{{a.place}}">{{a.content}}</option>
+	{% endfor %}
+	</select>
+	To <select name="destination">
+	<option value="0">the begining</option>
+	{% for a in components %}
+	<option value="{{a.place}}">after {{a.content}}</option>
+	{% endfor %}
+	</select>
+	<input type="submit" name="b" value="Reposition">
+	</form>
+  </div>
+  {% endif %}
 
 
   <div>

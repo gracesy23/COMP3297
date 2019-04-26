@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+
 class InstructorInfo(models.Model):
 	instructorID = models.IntegerField()
 	first_name = models.CharField(max_length = 200)
@@ -35,13 +36,19 @@ class Course(models.Model):
 	contains_modules = models.IntegerField()
 	description = models.TextField(max_length = 200,default = "N/A")
 	category = models.IntegerField(default = 0)
-	
+
 class Learner(models.Model):
 	learnerID = models.IntegerField()
-	learnerName = models.CharField(max_length = 200)
+	email = models.CharField(max_length = 200)
+	first_name = models.CharField(max_length = 200)
+	last_name = models.CharField(max_length = 200)
+	
+class Progress(models.Model):
+	learnerID = models.IntegerField()
 	takecourse = models.IntegerField()
 	progress = models.IntegerField()
 	pass_date = models.DateField(default="2000-01-01")
+	learnerName = models.CharField(max_length = 200)
 
 class Module(models.Model):
 	moduleID = models.IntegerField()
@@ -50,10 +57,19 @@ class Module(models.Model):
 	containsQuiz = models.IntegerField()
 	
 class Component(models.Model):
+	title = models.CharField(max_length = 200,default = 'entry')
 	compID = models.IntegerField()
 	content = models.TextField(max_length = 200)
 	componentType = models.IntegerField(default='1')
 	used = models.IntegerField(default='0')
+	
+class ComponentT(models.Model):
+	title = models.CharField(max_length = 200,default = 'entry')
+	compID = models.IntegerField()
+	content = models.TextField(max_length = 200)
+	componentType = models.IntegerField(default='1')
+	used = models.IntegerField(default='0')
+	place = models.IntegerField(default = 0)
 	
 class Quiz(models.Model):
 	quizID = models.IntegerField()
@@ -68,11 +84,14 @@ class Temp(models.Model):
 	title = models.CharField(max_length = 200)
 	progress = models.IntegerField()
 	pass_date = models.DateField(default = '2000-01-01')
+	category = models.CharField(max_length = 200,default = 'N/A')
+	description = models.TextField(default = 'N/A')
 	
 class ModuleT(models.Model):
 	modID = models.IntegerField()
 	title = models.CharField(max_length = 200, default='unnamed')
 	counter = models.IntegerField(default='1')
+	place = models.IntegerField(default = '0')
 	
 class Question(models.Model):
 	questionID = models.IntegerField()
@@ -95,3 +114,9 @@ class CourseT(models.Model):
 	taught_by = models.CharField(max_length = 200)
 	enroll = models.IntegerField()
 	CECU = models.IntegerField(default=6)
+	
+class History(models.Model):
+	title = models.CharField(max_length = 200)
+	date = models.DateField(default="2000-01-01")
+	CECU = models.IntegerField()
+	CCECU = models.IntegerField()
