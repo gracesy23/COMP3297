@@ -18,27 +18,27 @@
     <a class="btn btn-primary" href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
     <a class="btn btn-secondary" href="{% url 'instructorHome' iid=iid %}">Back to homepage</a>
   </div>
-  
+
   {% if empty == 0 %}
   <div>
-	<form  method='POST' action='{% url "change_mod_order" iid=iid cid=cid %}'>
-    {% csrf_token %}
-    Reposition module <select name="origin">
-	{% for a in modules %}
-	<option value="{{a.place}}">{{a.title}}</option>
-	{% endfor %}
-	</select>
-	To <select name="destination">
-	<option value="0">the begining</option>
-	{% for a in modules %}
-	<option value="{{a.place}}">after {{a.title}}</option>
-	{% endfor %}
-	</select>
-	<input type="submit" name="b" value="Reposition">
-	</form>
+  	<form  method='POST' action='{% url "change_mod_order" iid=iid cid=cid %}'>
+      {% csrf_token %}
+      Reposition module <select name="origin">
+    	{% for a in modules %}
+    	<option value="{{a.place}}">{{a.title}}</option>
+    	{% endfor %}
+    	</select>
+    	To <select name="destination">
+    	<option value="0">the begining</option>
+    	{% for a in modules %}
+    	<option value="{{a.place}}">after {{a.title}}</option>
+    	{% endfor %}
+    	</select>
+    	<input type="submit" name="b" value="Reposition">
+  	</form>
   </div>
   {% endif %}
-  
+
   <footer>
 
   </footer>

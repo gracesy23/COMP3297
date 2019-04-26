@@ -22,14 +22,14 @@
                  <textarea name="course_description" id="inputCourseDescription" class="form-control" rows="5" placeholder="Please Enter Course Description"></textarea>
                </div>
              </div>
-			 <div class="form-group">
+			       <div class="form-group">
                <lable for="inputCourseDescription" class="col-sm-1">Category:</lable>
                <div class="col-sm-12">
                  <select name="cateID" class="custom-select" style="margin-bottom: 1rem;">
-				{% for a in cate %}
-				<option value="{{a.cateID}}">{{a.title}}</option>
-				{% endfor %}
-				</select>
+                  {% for a in cate %}
+                  <option value="{{a.cateID}}">{{a.title}}</option>
+                  {% endfor %}
+                 </select>
                </div>
              </div>
               <div class="form-group">

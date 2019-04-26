@@ -108,7 +108,7 @@ def newaccount_sup(request,username,token):
 				'iid':iid
 			}
 			return render(request,'Instructor_reg_sup.html',context)
-	
+
 def learner_signup(request):
 	if(request.method == "POST"):
 		form = request.POST
@@ -147,7 +147,7 @@ def learner_signup(request):
 			return render(request,'appfail.html')
 	else:
 		return render(request,'learner_apply.html')
-	
+
 #learner homepage
 def redirect(request):
 	name = request.user.username
@@ -158,7 +158,7 @@ def redirect(request):
 		return instructorHome(request,user.userID)
 	else:
 		return administrator(request)
-		
+
 def sendmail(request):
 	form = request.POST
 	address = form.get('email')
@@ -186,13 +186,13 @@ def sendmail(request):
 	fail_silently=False,
 	)
 	return administrator(request)
-		
+
 def administrator(request):
 	return render(request,'admin.html')
 
 def loggedout(request):
 	return render(request,'loggedout.html')
-	
+
 @login_required
 def learner(request, id):
 	name = request.user.username
@@ -222,11 +222,11 @@ def learner(request, id):
 			'courses': courses,
 			'passed':passed
 		}
-		
+
 		return render(request, 'learner.html', context)
 	else:
 		return render(request, 'badlogin.html')
-	
+
 @login_required
 def course(request,p,cid,lid):
 	name = request.user.username
@@ -293,12 +293,12 @@ def course(request,p,cid,lid):
 			'lid':lid,
 			'check':check
 		}
-		
+
 		return render(request, 'course.html', context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def module(request, lid,mid,cid,p,counter):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -315,7 +315,7 @@ def module(request, lid,mid,cid,p,counter):
 			component = Component.objects.filter(compID = a.containsComp)
 			for c in component:
 				components.append(c)
-		
+
 		context = {
 			'components':components,
 			'quiz':quiz,
@@ -325,7 +325,7 @@ def module(request, lid,mid,cid,p,counter):
 			'lid':lid,
 			'check':quizAvail
 		}
-		
+
 		return render(request, 'module.html', context)
 	else:
 		return render(request,'badlogin.html')
@@ -336,7 +336,7 @@ def loadComp(request):
 	cid = request.GET.get('cid', 0)
 	p = request.GET.get('p', 0)
 	counter = request.GET.get('counter', 0)
-	
+
 	module = Module.objects.filter(moduleID = mid)
 	components = []
 	quizAvail = 0
@@ -356,7 +356,7 @@ def loadComp(request):
 	 "quiz": quiz,
 	 "component": componentarray
 	}
-	
+
 	return JsonResponse(result)
 
 def viewlist(request,lid):
@@ -373,14 +373,14 @@ def viewlist(request,lid):
 			course.CCECU = CCECU + course.CECU
 			list.append(course)
 			CCECU = course.CCECU
-	
+
 	context = {
 		'list':list,
 		'lid':lid
 	}
-	
+
 	return render(request,'history.html',context)
-	
+
 @login_required
 def courseModule(request,p,cid,lid,mid,counter):
 	name = request.user.username
@@ -429,7 +429,7 @@ def courseModule(request,p,cid,lid,mid,counter):
 			component = Component.objects.filter(compID = a.containsComp)
 			for c in component:
 				components.append(c)
-		
+
 		context = {
 			'title': title,
 			'avamodules': avamodules,
@@ -442,7 +442,7 @@ def courseModule(request,p,cid,lid,mid,counter):
 			'quiz':quiz,
 			'check':quizAvail,
 		}
-		
+
 		return render(request, 'coursemod.html', context)
 	else:
 		return render(request,'badlogin.html')
@@ -458,7 +458,7 @@ def quiz(request, lid,qid, cid, p):
 		for a in quiz:
 			question = Question.objects.get(questionID = a.questionID)
 			questions.append(question)
-		
+
 		context = {
 			'questions':questions,
 			'cid':cid,
@@ -466,17 +466,17 @@ def quiz(request, lid,qid, cid, p):
 			'lid':lid,
 			'qid':qid
 		}
-		
+
 		return render(request, 'quiz.html', context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def instructor(request, iid, cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
 	iid = int(iid)
-	if temp.role == 2 and temp.userID == iid:	
+	if temp.role == 2 and temp.userID == iid:
 		course = Course.objects.filter(courseID = cid)
 		modules = []
 		i = 0
@@ -494,7 +494,7 @@ def instructor(request, iid, cid):
 		empty = 1
 		if i > 1:
 			empty = 0
-				
+
 		context = {
 			'title': title,
 			'modules': modules,
@@ -502,12 +502,12 @@ def instructor(request, iid, cid):
 			'iid':iid,
 			'empty': empty
 		}
-		
-		return render(request, 'courseIns.html', context)	
+
+		return render(request, 'courseIns.html', context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def createModule(request,iid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -524,12 +524,12 @@ def createModule(request,iid,cid):
 			created_by = c.created_by
 		newcourse = Course.objects.create(courseID = cid, title = title, created_by = created_by, contains_modules = newmid)
 		mod = Module.objects.create(moduleID = newmid,moduleTitle = 'Unnamed',containsComp = 0, containsQuiz = 0)
-		
+
 		return instructor(request, iid, cid)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def change_mod_order(request,iid,cid):
 	form = request.POST
 	origin = int(form.get('origin'))
@@ -575,7 +575,7 @@ def change_mod_order(request,iid,cid):
 					break
 				temp = alpha
 		return instructor(request,iid,cid)
-		
+
 def change_comp_order(request, mid,iid,cid):
 	form = request.POST
 	origin = int(form.get('origin'))
@@ -602,7 +602,7 @@ def change_comp_order(request, mid,iid,cid):
 	else:
 		temp = 0
 		alpha = 0
-		modules = Modules.objects.filter(moduleID = mid)
+		modules = Module.objects.filter(moduleID = mid)
 		for a in modules:
 			if a.containsComp != 0:
 				i = i + 1
@@ -621,8 +621,8 @@ def change_comp_order(request, mid,iid,cid):
 					break
 				temp = alpha
 		return moduleIns(request, mid,iid,cid)
-		
-@login_required	
+
+@login_required
 def moduleIns(request, mid,iid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -653,7 +653,7 @@ def moduleIns(request, mid,iid,cid):
 		for a in allComp:
 			if a.used == 0:
 				choice.append(a)
-					
+
 		#add a quiz part
 		allQuiz = Quiz.objects.all()
 		temp = QuizT(quizID = 0,numOfQuestion = 0)
@@ -671,7 +671,7 @@ def moduleIns(request, mid,iid,cid):
 		empty = 1
 		if i > 1:
 			empty = 0
-		
+
 		context = {
 			'components':components,
 			'quiz':quiz,
@@ -685,12 +685,12 @@ def moduleIns(request, mid,iid,cid):
 			'quizlist':quizlist,
 			'empty':empty
 		}
-		
+
 		return render(request, 'moduleIns.html', context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def changeModName(request,mid,iid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -703,7 +703,7 @@ def changeModName(request,mid,iid,cid):
 			for m in module:
 				m.moduleTitle = title
 				m.save()
-		
+
 		return moduleIns(request, mid,iid,cid)
 	else:
 		return render(request,'badlogin.html')
@@ -715,7 +715,7 @@ def addComp(request,mid,iid,cid):
 	iid = int(iid)
 	if temp.role == 2 and temp.userID == iid:
 		form = request.POST
-		
+
 		newmod = Module()
 		module = Module.objects.filter(moduleID = mid)
 		for m in module:
@@ -728,12 +728,12 @@ def addComp(request,mid,iid,cid):
 		comp = Component.objects.get(compID = temp)
 		comp.used = 1
 		comp.save()
-		
+
 		return moduleIns(request, mid,iid,cid)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def addQuiz(request,mid,iid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -745,13 +745,13 @@ def addQuiz(request,mid,iid,cid):
 		for m in module:
 			m.containsQuiz = quiz
 			m.save()
-		
+
 		return moduleIns(request, mid,iid,cid)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
-def quizCheck(request,qid,p,lid,cid):	
+@login_required
+def quizCheck(request,qid,p,lid,cid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
 	lid = int(lid)
@@ -777,7 +777,7 @@ def quizCheck(request,qid,p,lid,cid):
 			learner = Progress.objects.get(takecourse = cid, learnerID = lid)
 			learner.progress = p
 			learner.save()
-		result = result * 100	
+		result = result * 100
 		context = {
 			'passed':passed,
 			'result':result,
@@ -785,12 +785,12 @@ def quizCheck(request,qid,p,lid,cid):
 			'cid':cid,
 			'p':p
 		}
-			
-		return render(request,'quizSubmit.html',context)	
+
+		return render(request,'quizSubmit.html',context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def instructorHome(request, iid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -806,6 +806,8 @@ def instructorHome(request, iid):
 				for c in course:
 					temp.courseID = c.courseID
 					temp.title = c.title
+					temp.category = c.category
+					temp.description = c.description
 					temp.progress = c.created_by
 				courses.append(temp)
 		context = {
@@ -813,12 +815,12 @@ def instructorHome(request, iid):
 			'name': name,
 			'courses': courses
 		}
-		
+
 		return render(request, 'instructorHomepage.html', context)
 	else:
 		return render(request,'badlogin.html')
 
-@login_required	
+@login_required
 def create_new_course(request,iid):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -862,7 +864,7 @@ def create_new_course(request,iid):
 	else:
 		return render(request,'badlogin.html')
 
-@login_required		
+@login_required
 def view_all_courses(request,lid,cate,alert):
 	name = request.user.username
 	temp = UserLogin.objects.get(username = name)
@@ -872,9 +874,9 @@ def view_all_courses(request,lid,cate,alert):
 		enrolled_courses = []
 		for a in learner:
 			enrolled_courses.append(a.takecourse)
-		
+
 		courses = []
-		
+
 		if cate == '0':
 			course = Course.objects.all().order_by('courseID')
 			cid = 0
@@ -914,14 +916,14 @@ def view_all_courses(request,lid,cate,alert):
 		cate_list = Category.objects.all()
 		cate = []
 		for a in cate_list:
-			cate.append(a)	
+			cate.append(a)
 		context = {
 			'courses':courses,
 			'lid':lid,
 			'alert':alert,
 			'cate':cate
 		}
-		
+
 		return render(request, 'view_all_courses.html',context)
 	else:
 		return render(request,'badlogin.html')
@@ -939,12 +941,7 @@ def enroll(request,lid,cid):
 		new_learner.takecourse = cid
 		new_learner.progress = 0
 		new_learner.save()
-		
+
 		return view_all_courses(request,lid,'0',1)
 	else:
 		return render(request,'badlogin.html')
-
-	
-	
-	
-	

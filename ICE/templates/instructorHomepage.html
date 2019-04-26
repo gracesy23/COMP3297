@@ -6,18 +6,182 @@
   <nav>
   	<h3>Course(s) created by you:</h3>
 
-    <ol id="sortable">
-      {% for c in courses %}
-    <li><a href="{% url 'instructor' iid=iid cid=c.courseID %}">{{c.title}}</a></li>
-      {% endfor %}
-    </ol>
 
 
+    <div class="row">
+      <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link active" id="v-pills-all-tab" data-toggle="pill" href="#v-pills-all" role="tab" aria-controls="v-pills-all" aria-selected="true">All courses</a>
+          <a class="nav-link" id="v-pills-MandA-tab" data-toggle="pill" href="#v-pills-MandA" role="tab" aria-controls="v-pills-MandA" aria-selected="false">Mergers and Acquisitions</a>
+          <a class="nav-link" id="v-pills-Markets-tab" data-toggle="pill" href="#v-pills-Markets" role="tab" aria-controls="v-pills-Markets" aria-selected="false">Markets</a>
+          <a class="nav-link" id="v-pills-Risk-tab" data-toggle="pill" href="#v-pills-Risk" role="tab" aria-controls="v-pills-Risk" aria-selected="false">Risk Management</a>
+          <a class="nav-link" id="v-pills-Securities-tab" data-toggle="pill" href="#v-pills-Securities" role="tab" aria-controls="v-pills-Securities" aria-selected="false">Securities</a>
+          <a class="nav-link" id="v-pills-FM-tab" data-toggle="pill" href="#v-pills-FM" role="tab" aria-controls="v-pills-FM" aria-selected="false">Financial Modelling</a>
+          <a class="nav-link" id="v-pills-Operations-tab" data-toggle="pill" href="#v-pills-Operations" role="tab" aria-controls="v-pills-Operations" aria-selected="false">Operations</a>
+          <a class="nav-link" id="v-pills-Fintech-tab" data-toggle="pill" href="#v-pills-Fintech" role="tab" aria-controls="v-pills-Fintech" aria-selected="false">Fintech</a>
+          <a class="nav-link" id="v-pills-IT-tab" data-toggle="pill" href="#v-pills-IT" role="tab" aria-controls="v-pills-IT" aria-selected="false">Information Technology</a>
+        </div>
+        <div class="btn-group mt-2" role="group" aria-label="JustButtongroup">
+          <a class="btn btn-primary" href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
+          <a class="btn btn-secondary" href="{% url 'logout' %}">Log out</a>
+        </div>
+      </div>
 
-    <div class="btn-group" role="group" aria-label="JustButtongroup">
-      <a class="btn btn-primary" href="{% url 'create_new_course' iid=iid %}">Create a new course</a>
-      <a class="btn btn-secondary" href="{% url 'logout' %}">Log out</a>
+      <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-all" role="tabpanel" aria-labelledby="v-pills-all-tab">These are all courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                  <div class="card bg-light mb-3">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/405238/pexels-photo-405238.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-MandA" role="tabpanel" aria-labelledby="v-pills-MandA-tab">These are Mergers and Acquisitions courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 1 %}
+                  <div class="card bg-light mb-3">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/1648839/pexels-photo-1648839.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-Markets" role="tabpanel" aria-labelledby="v-pills-Markets-tab">These are Markets courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 2 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/266004/pexels-photo-266004.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-Risk" role="tabpanel" aria-labelledby="v-pills-Risk-tab">These are Risk Management courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 3 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/2027105/pexels-photo-2027105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-Securities" role="tabpanel" aria-labelledby="v-pills-Securities-tab">These are Securities courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 4 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/980859/pexels-photo-980859.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-FM" role="tabpanel" aria-labelledby="v-pills-FM-tab">These are Financial Modelling courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 5 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/814264/pexels-photo-814264.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-Operations" role="tabpanel" aria-labelledby="v-pills-Operations-tab">These are Operations courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 6 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/1556704/pexels-photo-1556704.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-Fintech" role="tabpanel" aria-labelledby="v-pills-Fintech-tab">These are Fintech courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 7 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/955792/pexels-photo-955792.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-IT" role="tabpanel" aria-labelledby="v-pills-IT-tab">These are Information Technology courses:
+            <div class="card-columns">
+              {% for c in courses %}
+                {% if c.category == 8 %}
+                  <div class="card">
+                    <img class="card-img-top" src="https://images.pexels.com/photos/718227/pexels-photo-718227.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.title}}</h5>
+                      <p class="card-text">{{c.description}}</p>
+                      <a href="{% url 'instructor' iid=iid cid=c.courseID %}" class="btn btn-info">Course Details</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+
+
+
+
+
+
+
   </nav>
   <footer>
 
