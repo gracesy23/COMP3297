@@ -11,46 +11,82 @@
 	   <li class="list-group-item list-group-item-action"><a href="{% url 'moduleIns' mid=m.modID iid=iid cid=cid %}">{{m.place}}: {{m.title}}</a></li>
 	  {% endfor %}
   </ol>
-  </nav>
-  <br>
+</nav>
+<br>
 
-  <div class="btn-group" role="group" aria-label="JustButtongroup">
-    <a class="btn btn-primary" href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
-    <a class="btn btn-secondary" href="{% url 'instructorHome' iid=iid %}">Back to homepage</a>
-  </div>
+<div class="btn-group" role="group" aria-label="JustButtongroup">
+  <a class="btn btn-primary" href="{% url 'moduleCreate'  iid=iid cid=cid %}">Create a new module</a>
+  <a class="btn btn-secondary" href="{% url 'instructorHome' iid=iid %}">Back to homepage</a>
+</div>
 
-  {% if empty == 0 %}
-  <div>
-  	<form  method='POST' action='{% url "change_mod_order" iid=iid cid=cid %}'>
-      {% csrf_token %}
-      Reposition module <select name="origin">
-    	{% for a in modules %}
-    	<option value="{{a.place}}">{{a.title}}</option>
-    	{% endfor %}
-    	</select>
-    	To <select name="destination">
-    	<option value="0">the begining</option>
-    	{% for a in modules %}
-    	<option value="{{a.place}}">after {{a.title}}</option>
-    	{% endfor %}
-    	</select>
-    	<input type="submit" name="b" value="Reposition">
-  	</form>
-  </div>
-  {% endif %}
+{% if empty == 0 %}
+<div>
+  <form method='POST' action='{% url "change_mod_order" iid=iid cid=cid %}'>
+    {% csrf_token %}
+    Reposition module <select name="origin">
+      {% for a in modules %}
+      <option value="{{a.place}}">{{a.title}}</option>
+      {% endfor %}
+    </select>
+    To <select name="destination">
+      <option value="0">the begining</option>
+      {% for a in modules %}
+      <option value="{{a.place}}">after {{a.title}}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" name="b" value="Reposition">
+  </form>
+</div>
+{% endif %}
 
-  <footer>
+<footer>
 
-  </footer>
+</footer>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-  <script>
-    $( function() {
-     $( "#sortable" ).sortable({
-       update: function (event, ui){
-         console.log($(this));
-       }
-     });
-     $( "#sortable" ).disableSelection();
-    } );
-  </script>
+<script>
+
+  var origin = 0;
+  $("#sortable").sortable({
+
+    start: function (event, ui) {
+      origin = ui.item.index();
+    },
+    update: function (event, ui) {
+      // console.log(ui);
+      var iid = ui.item[0].id;
+      var cid = ui.item[0].value;
+      var destination = ui.item.index();
+      //console.log(origin);
+      //console.log(destination);
+      var s = document.createElement("inputx"); //input element, Submit button
+s.setAttribute('type',"submit");
+
+
+      var formData = new FormData();
+      s.append("origin", origin);
+      s.append("destination", destination);
+
+      var url = "/instructor/changemodorder/" + iid + "/" + cid ;
+      /*
+      $.ajax({
+        url: url,
+        data: s,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (data) {
+          alert(data);
+        }
+
+      })
+      */
+
+    }
+    });
+
+
+</script>
 {% endblock %}
