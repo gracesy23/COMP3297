@@ -678,12 +678,13 @@ def moduleIns(request, mid,iid,cid):
 		counter = 0
 		quizlist = []
 		for a in allQuiz:
-			if a.quizID != temp.quizID and temp.quizID != 0:
+			if a.title != temp.quizID and temp.quizID != 0:
 				quizlist.append(temp)
 				temp = QuizT()
-				temp.quizID = a.quizID
+				temp.quizID = a.title
 			elif a.quizID != temp.quizID:
-				temp.quizID = a.quizID
+				temp.title = a.title
+				temp.quizID = a.title
 			temp.numOfQuestion = temp.numOfQuestion + 1
 		quizlist.append(temp)
 		empty = 1

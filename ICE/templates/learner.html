@@ -1,56 +1,34 @@
-{% extends 'layout.html' %}
+{% extends 'learnerbase.html' %}
+{% block title %}Learn homepage{% endblock %}
+{% block body %}
 
-{% block header %}
-<title>ICE</title>
-{% endblock %}
+  <div class="card-columns">
+    {% for Course in courses %}
+        <div class="card bg-light mb-3">
+          <img class="card-img-top" src="https://images.pexels.com/photos/1648839/pexels-photo-1648839.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{Course.title}}</h5>
+            <p class="card-text">finished modules: {{Course.progress}}</p>
+            <p class="card-text">{{Course.description}}</p>
+            <a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}" class="btn btn-info">Course Details</a>
+          </div>
+        </div>
+    {% endfor %}
+    {% for Course in passed %}
+        <div class="card bg-light mb-3">
+          <img class="card-img-top" src="https://images.pexels.com/photos/405238/pexels-photo-405238.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{Course.title}}</h5>
+            <p class="card-text">{{Course.description}}</p>
+            <p class="card-text">Passed on {{Course.pass_date}}</p>
+            <a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}" class="btn btn-info">Course Details</a>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+  <div class="btn-group mt-2" role="group" aria-label="JustButtongroup">
+    <a class="btn btn-primary" href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
+    <a class="btn btn-primary" href="{% url 'view_history' lid=lid%}">Views History</a>
+  </div>
 
-{% block content %}
-  <nav>
-    <ul>
-      {% for Course in courses %}
-	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
-	  {% endfor %}
-	  {% for Course in passed %}
-	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
-	  {% endfor %}
-	</ul>
-  </nav>
-  <div>
-    <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
-	<br>
-	<a href="{% url 'view_history' lid=lid%}">View History</a>
-    </div>
 {% endblock %}
-<DOCTYPE! html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <title>Learner's homepage</title>
-</head>
-<body>
-  <header>
-    <h1>Welcome, {{name}}</h1>
-  </header>
-  <div class = 'container'>
-  <h2>These are the courses you are currently taking</h2>
-  <h3><a href="{% url 'logout' %}">Log out</a></h3>
-  <nav>
-    <ul>
-      {% for Course in courses %}
-	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, finished modules: {{Course.progress}}</a></li>
-	  {% endfor %}
-	  {% for Course in passed %}
-	  <li><a href="{% url 'course' lid=lid p=Course.progress cid=Course.courseID %}">{{Course.title}}, Passed on {{Course.pass_date}}</a></li>
-	  {% endfor %}
-	</ul>
-  </nav>
-  </div>
-  <div>
-  <a href="{% url 'allcourses' lid=lid cate=0 alert=0 %}">View all available courses</a>
-  </div>
-  <footer>
-    ICE -one tool to learn it all
-  </footer>
-</body>
-</html>

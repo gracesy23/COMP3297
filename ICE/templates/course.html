@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-<title>Courses</title>
+<title>Courses Detail</title>
 {% endblock %}
 
 {% block sidebar %}
-<div id="module-list" value={{p}}>
+<div id="module-list" >
 	<nav>
     <ul>
       {% for m in avamodules %}
@@ -15,7 +15,7 @@
 	  <li><h5 class="unavamodule">{{m.title}}</h5></li>
 	  {% endfor %}
 	  </ul>
-  </nav>          
+  </nav>
 
 </div>
 
@@ -33,15 +33,9 @@
 
 {% block script %}
 <script>
+	$(document).ready(function() {
 
-var passes = $("#module-list")[0].attributes.value.value;
-console.log(passes);
-var i = 0;
-$('.avamodule').each(function(i, obj) {
-		if (i < passes){
-			this.append(" (Passed)");
-		}
-		i++;
+
 });
 
 	(function(angular) {
@@ -57,11 +51,3 @@ $('.avamodule').each(function(i, obj) {
 
 </script>
 {% endblock %}
-
-<body>
-
-  <footer>
-    
-  </footer>
-</body>
-</html>

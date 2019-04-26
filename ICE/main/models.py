@@ -7,6 +7,7 @@ class InstructorInfo(models.Model):
 	first_name = models.CharField(max_length = 200)
 	last_name = models.CharField(max_length = 200)
 	intro = models.TextField(max_length = 200)
+	email = models.CharField(max_length = 200,default='N/A')
 
 class Category(models.Model):
 	cateID = models.IntegerField()
@@ -79,10 +80,12 @@ class Quiz(models.Model):
 	standard = models.IntegerField(default=60)
 	numOfQuestion = models.IntegerField(default=0)
 	draw = models.IntegerField(default=0)
+	title = models.IntegerField(default=0)
 
 class QuizT(models.Model):
 	quizID = models.IntegerField()
-	numOfQuestion = models.IntegerField(default='0')
+	numOfQuestion = models.IntegerField(default=0)
+	title = models.IntegerField(default=0)
 	
 class Temp(models.Model):
 	courseID = models.IntegerField()
