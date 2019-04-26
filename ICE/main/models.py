@@ -117,6 +117,7 @@ class CourseT(models.Model):
 	title = models.CharField(max_length = 200)
 	description = models.TextField(max_length = 200)
 	taught_by = models.CharField(max_length = 200)
+	autobio = models.CharField(max_length = 200,default='N/A')
 	enroll = models.IntegerField()
 	CECU = models.IntegerField(default=6)
 	

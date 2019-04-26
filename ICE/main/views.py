@@ -916,6 +916,8 @@ def view_all_courses(request,lid,cate,alert):
 							temp.enroll = 0
 					instructor = Instructor.objects.get(create_course = cid)
 					temp.taught_by = instructor.name
+					instructor = InstructorInfo.objects.get(instructorID = instructor.instructorID)
+					temp.autobio = instructor.intro
 					courses.append(temp)
 		else:
 			course = Course.objects.all().filter(category = cate).order_by('courseID')
