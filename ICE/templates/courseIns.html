@@ -61,8 +61,8 @@
       var iid = ui.item[0].id;
       var cid = ui.item[0].value;
       var destination = ui.item.index();
-      console.log(origin);
-      console.log(destination);
+      //console.log(origin);
+      //console.log(destination);
       var s = document.createElement("inputx"); //input element, Submit button
 s.setAttribute('type',"submit");
 
@@ -72,7 +72,7 @@ s.setAttribute('type',"submit");
       s.append("destination", destination);
 
       var url = "/instructor/changemodorder/" + iid + "/" + cid ;
-      
+      /*
       $.ajax({
         url: url,
         data: s,
@@ -84,6 +84,7 @@ s.setAttribute('type',"submit");
         }
 
       })
+      */
       
     }
     });
